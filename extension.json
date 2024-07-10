@@ -6,24 +6,23 @@
 	"version": "0.1",
 	"license-name": "GPL-2.0-or-later",
 	"type": "others",
-	"AutoloadClasses":{
-		"RateDB": "includes/RateDB.php"
+	"AutoloadNamespaces":{
+		"Mediawiki\\Extension\\SectionRatings\\": "includes/"
 	},
-	"callback": "SectionRatings\\RateDB::onExtensionLoad",
-	"Hooks": {
-		"LoadExtensionSchemaUpdates": "SectionRatings\\RateDB::onLoadExtensionSchemaUpdates",
-		"ParserFirstCallInit": "SectionRatings\\RateDB::onParserFirstCallInit",
-		"RateCreated": "SectionRatings\\RateDB::onRateCreated",
-		"RateImported": "SectionRatings\\RateDB::onRateImported",
-		"RateResultRequested": "SectionRatings\\RateDB::onRateResultRequested"
-	},
+	"RestRoutes": [
+		{
+			"path": "/sectionratings/v0/rategame/{gamename}/{score}",
+			"method": "POST",
+			"class": "Mediawiki\\Extension\\SectionRatings\\RateGame"
+		}
+	],
 	"config":{
 		"SeRaTargetContest": [],
 		"SeRaTopNumber": 5
 	},
 	"manifest_version": 2,
 	"requires": {
-		"MediaWiki": ">= 1.36.0",
-		"RatePage": ">= 1.0.0"
+		"MediaWiki": ">= 1.35.0",
+		"VoteNY": ">= 3.2"
 	}
 }
