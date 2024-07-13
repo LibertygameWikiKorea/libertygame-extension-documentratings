@@ -23,10 +23,10 @@ class GetGameRatings extends SimpleHandler {
 		$dbaseref = wfGetDB(DB_REPLICA);
 		
 		$query = $dbaseref->select('Vote', ['page_id' => 'vote_page_id', 'votecount' => 'COUNT(*)', 'vote_average' => 'AVG(vote_value)'],
-		'', '__METHOD__', ['GROUP BY vote_page_id', 'LIMIT ' . $score_num]);
+		'', '__METHOD__', ['GROUP BY vote_page_id']);
 		
 		$queryresult = [];
-		for ($i = 0 ; $i < $query->count(); $i += 1){
+		for ($i = 0 ; $i < $query->numRows(); $i += 1){
 			array_push($queryresult, $query->current());
 			$query->next();
 		}
@@ -37,7 +37,7 @@ class GetGameRatings extends SimpleHandler {
 	}
 	
 	public function needsWriteAccess() {
-		return false; // TODO: DB 작업을 위해 true로 바꿀 것
+		return false;
 	}
 	
 	public function getParamSettings() {
