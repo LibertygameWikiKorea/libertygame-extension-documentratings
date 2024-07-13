@@ -9,22 +9,24 @@ use MediaWiki\Rest\SimpleHandler;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\Rdbms\Database;
 
-// POST /sectionratings/v0/rategame/{game_id}/{score} -> 성공/실패 반환
+// GET /sectionratings/v0/getgameratings/{category}/{count} -> 성공/실패 반환
 
 // class
-class RateGame extends SimpleHandler {
+class GetGameRatings extends SimpleHandler {
 	public $User;
 	public $PageID;
 	
-	public function run( $game_id, $score ) {
-		$score_num = (int) $score;
+	public function run( $category, $count ) {
+		$score_num = (string) $count;
+		$services = MediaWikiServices::getInstance();
+		$dbaseref = $services->getConnectionProvider()->getReplicaDatabase();
 		
-		if ($score < 1 || $score > 5){
-			return ["result" => "FAIL"];
-		} else {
-			return ["result" => "SUCCESS"
-			];
-		}
+		$queryresult = $dbaseref->selectField('Vote', 'vote_page_id, COUNT(*) AS votecount, AVG(vote_value) AS vote_average',
+		'', '__METHOD__', ['GROUP BY vote_page_id', 'LIMIT ' . $score_num]);
+		
+		return ["result" => "SUCCESS",
+			"Vote" => $queryresult
+		];
 	}
 	
 	public function needsWriteAccess() {

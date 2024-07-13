@@ -11,11 +11,15 @@
 	},
 	"RestRoutes": [
 		{
-			"path": "/sectionratings/v0/rategame/{gamename}/{score}",
-			"method": "GET",
+			"path": "/sectionratings/v0/rategame/{game_id}/{score}",
+			"method": "POST",
 			"class": "MediaWiki\\Extension\\SectionRatings\\RateGame"
+		},
+		{
+			"path": "/sectionratings/v0/getgameratings/{category}/{count}",
+			"method": "GET",
+			"class": "MediaWiki\\Extension\\SectionRatings\\GetGameRatings"
 		}
-		
 	],
 	"manifest_version": 2,
 	"requires": {
