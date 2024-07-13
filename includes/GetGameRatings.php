@@ -23,7 +23,7 @@ class GetGameRatings extends SimpleHandler {
 		$dbaseref = wfGetDB(DB_REPLICA);
 		
 		$query = $dbaseref->select('Vote', ['page_id' => 'vote_page_id', 'votecount' => 'COUNT(*)', 'vote_average' => 'AVG(vote_value)'],
-		'', '__METHOD__', ['GROUP BY' => 'vote_page_id']);
+		'', '__METHOD__', ['GROUP BY' => 'vote_page_id', 'LIMIT' => $count ]);
 		
 		$queryresult = [];
 		for ($i = 0 ; $i < $query->numRows(); $i += 1){
