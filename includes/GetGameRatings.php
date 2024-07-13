@@ -35,12 +35,12 @@ class GetGameRatings extends SimpleHandler {
 	
 	public function getParamSettings() {
 		return [
-			'game_id' => [
+			'category' => [
 				self::PARAM_SOURCE => 'path',
-				ParamValidator::PARAM_TYPE => 'integer',
-				ParamValidator::PARAM_REQUIRED => true,
+				ParamValidator::PARAM_TYPE => 'string',
+				ParamValidator::PARAM_REQUIRED => false,
 			],
-			'score' => [
+			'count' => [
 				self::PARAM_SOURCE => 'path',
 				ParamValidator::PARAM_TYPE => 'integer',
 				ParamValidator::PARAM_REQUIRED => true,
@@ -48,5 +48,3 @@ class GetGameRatings extends SimpleHandler {
 		];
 	}
 }
-
-// GET /sectionratings/v0/getgameratings/{gamename} -> 배열 반환, 없으면 전체 게임 반환
