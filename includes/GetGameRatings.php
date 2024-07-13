@@ -22,9 +22,8 @@ class GetGameRatings extends SimpleHandler {
 		$dbaseref = wfGetDB(DB_REPLICA);
 		// TODO: After 1.42+, replica DB must be called via $services->getConnectionProvider()->getReplicaDatabase();
 		
-		$queryresult = $dbaseref->selectField('Vote', 'vote_page_id, COUNT(*) AS votecount, AVG(vote_value) AS vote_average',
+		$queryresult = $dbaseref->select('Vote', ['page_id' => 'vote_page_id', 'votecount' => 'COUNT(*)', 'vote_average' => 'AVG(vote_value)'],
 		'', '__METHOD__', ['GROUP BY vote_page_id', 'LIMIT ' . $score_num]);
-		
 		return ["result" => "SUCCESS",
 			"Vote" => $queryresult
 		];
