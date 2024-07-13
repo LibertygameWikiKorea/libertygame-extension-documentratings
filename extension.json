@@ -17,9 +17,6 @@
 		}
 		
 	],
-	"config":{
-		"SeRaTopNumber": 5
-	},
 	"manifest_version": 2,
 	"requires": {
 		"MediaWiki": ">= 1.35.0",

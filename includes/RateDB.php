@@ -14,7 +14,7 @@ class RateGame extends SimpleHandler {
 	
 	public function run( $gamename, $score ) {
 		$score_num = (int) $score;
-		if ($score < 1 || $score > $wgSeRaTopNumber){
+		if ($score < 1 || $score > 5){
 			return ["result" => "FAIL"];
 		} else {
 			return ["result" => "SUCCESS"];
@@ -27,16 +27,16 @@ class RateGame extends SimpleHandler {
 	
 	public function getParamSettings() {
 		return [
-		'gamename' => [
-			self::PARAM_SOURCE => 'path',
-			ParamValidator::PARAM_TYPE => 'string',
-			ParamValidator::PARAM_REQUIRED => true,
-		],
-		'score' => [
-			self::PARAM_SOURCE => 'path',
-			ParamValidator::PARAM_TYPE => 'int',
-			ParamValidator::PARAM_REQUIRED => true,
-		]
+			'gamename' => [
+				self::PARAM_SOURCE => 'path',
+				ParamValidator::PARAM_TYPE => 'string',
+				ParamValidator::PARAM_REQUIRED => true,
+			],
+			'score' => [
+				self::PARAM_SOURCE => 'path',
+				ParamValidator::PARAM_TYPE => 'int',
+				ParamValidator::PARAM_REQUIRED => true,
+			],
 		];
 	}
 }
