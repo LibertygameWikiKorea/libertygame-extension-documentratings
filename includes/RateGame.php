@@ -35,7 +35,7 @@ class RateGame extends SimpleHandler {
 			],
 			'score' => [
 				self::PARAM_SOURCE => 'path',
-				ParamValidator::PARAM_TYPE => 'int',
+				ParamValidator::PARAM_TYPE => 'integer',
 				ParamValidator::PARAM_REQUIRED => true,
 			],
 		];
