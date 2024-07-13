@@ -7,13 +7,13 @@
 	"license-name": "GPL-2.0-or-later",
 	"type": "others",
 	"AutoloadNamespaces":{
-		"Mediawiki\\Extension\\SectionRatings\\": "includes/"
+		"MediaWiki\\Extension\\SectionRatings\\": "includes/"
 	},
 	"RestRoutes": [
 		{
 			"path": "/sectionratings/v0/rategame/{gamename}/{score}",
 			"method": "GET",
-			"class": "Mediawiki\\Extension\\SectionRatings\\RateGame"
+			"class": "MediaWiki\\Extension\\SectionRatings\\RateGame"
 		}
 		
 	],

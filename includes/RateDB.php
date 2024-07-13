@@ -1,11 +1,12 @@
 <?php
 // namespace
-namespace Mediawiki\Extension\SectionRatings;
+namespace MediaWiki\Extension\SectionRatings;
 
 // use statement
 use ApiBase;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Rest\SimpleHandler;
+use Wikimedia\ParamValidator\ParamValidator;
 
 // POST /sectionratings/v0/rategame/{gamename}/{score} -> 성공/실패 반환
 
