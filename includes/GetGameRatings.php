@@ -14,8 +14,6 @@ use Title;
 
 // class
 class GetGameRatings extends SimpleHandler {
-	public $User;
-	public $PageID;
 	
 	public function run( $category, $count ) {
 		if ($count < 1 || $count > 100) {
@@ -26,14 +24,18 @@ class GetGameRatings extends SimpleHandler {
 		// TODO: After 1.42+, replica DB must be called via $services->getConnectionProvider()->getReplicaDatabase();
 		$dbaseref = wfGetDB(DB_REPLICA);
 		
+		// $query는 stdClass 형의 변수임
 		$query = $dbaseref->select('Vote', ['page_id' => 'vote_page_id', 'votecount' => 'COUNT(*)', 'vote_average' => 'AVG(vote_value)'],
 		'', '__METHOD__', ['GROUP BY' => 'vote_page_id', 'ORDER BY' => 'vote_average DESC','LIMIT' => $count ]);
 		
 		$queryresult = [];
 		for ($i = 0 ; $i < $query->numRows(); $i += 1){
 			$row = $query->current();
-			$title = Title::newFromID((int) $row->page_id)->getTitleValue()->getText();
-			array_push($queryresult, ["pagename" => $title, "votecount" => $row->votecount, "score" => $row->vote_average]);
+			$title = Title::newFromID((int) $row->page_id);
+			if (in_array($category, array_keys($title->getParentCategories(), $category, true), true)){
+				$titlestr = $title->getTitleValue()->getText();
+				array_push($queryresult, ["pagename" => $titlestr, "votecount" => $row->votecount, "score" => $row->vote_average]);
+			}
 			$query->next();
 		}
 		
