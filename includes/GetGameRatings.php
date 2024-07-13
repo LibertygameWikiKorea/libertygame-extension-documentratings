@@ -32,8 +32,8 @@ class GetGameRatings extends SimpleHandler {
 		$queryresult = [];
 		for ($i = 0 ; $i < $query->numRows(); $i += 1){
 			$row = $query->current();
-			$title = Title::newFromID((int) $row["page_id"])->getTitleValue()->getText();
-			array_push($queryresult, ["pagename" => $title, "votecount" => $row["votecount"], "score" => $row["vote_average"]]);
+			$title = Title::newFromID((int) $row->page_id)->getTitleValue()->getText();
+			array_push($queryresult, ["pagename" => $title, "votecount" => $row->votecount, "score" => $row->vote_average]);
 			$query->next();
 		}
 		
