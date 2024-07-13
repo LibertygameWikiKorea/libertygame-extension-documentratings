@@ -19,7 +19,9 @@
 	],
 	"manifest_version": 2,
 	"requires": {
-		"MediaWiki": ">= 1.35.0",
-		"VoteNY": ">= 3.2"
+		"MediaWiki": ">= 1.37.0",
+		"extensions" : {
+			"VoteNY": "*"
+		}
 	}
 }
