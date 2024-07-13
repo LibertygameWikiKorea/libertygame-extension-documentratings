@@ -4,7 +4,7 @@
 	"url": "https://libertyga.me",
 	"description": "This extension modifies result of database table used by VoteNY extension.",
 	"version": "0.1",
-	"license-name": "GPL-2.0-or-later",
+	"license-name": "MIT",
 	"type": "others",
 	"AutoloadNamespaces":{
 		"MediaWiki\\Extension\\SectionRatings\\": "includes/"
