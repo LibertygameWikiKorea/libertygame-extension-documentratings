@@ -2,7 +2,7 @@
 	"name": "SectionRatings",
 	"author": "Xen alpha(Senouis)",
 	"url": "https://libertyga.me",
-	"description": "This extension modifies and sorts result of database table used by RatePage extension.",
+	"description": "This extension modifies result of database table used by VoteNY extension.",
 	"version": "0.1",
 	"license-name": "GPL-2.0-or-later",
 	"type": "others",
@@ -12,7 +12,7 @@
 	"RestRoutes": [
 		{
 			"path": "/sectionratings/v0/rategame/{gamename}/{score}",
-			"method": "POST",
+			"method": "GET",
 			"class": "Mediawiki\\Extension\\SectionRatings\\RateGame"
 		}
 		
