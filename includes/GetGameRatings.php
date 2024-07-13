@@ -21,7 +21,7 @@ class GetGameRatings extends SimpleHandler {
 		}
 		$score_num = (string) $count;
 		$services = MediaWikiServices::getInstance();
-		// TODO: After 1.42+, replica DB must be called via $services->getConnectionProvider()->getReplicaDatabase();
+		// TODO: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
 		$dbaseref = wfGetDB(DB_REPLICA);
 		
 		// $query는 stdClass 형의 변수임
@@ -31,7 +31,7 @@ class GetGameRatings extends SimpleHandler {
 		$queryresult = [];
 		for ($i = 0 ; $i < $query->numRows(); $i += 1){
 			$row = $query->current();
-			$title = Title::newFromID((int) $row->page_id);
+			$title = Title::newFromID((int) $row->page_id)->getSubjectPage(); // 토론 페이지에 위젯이 붙는 것을 가정하고 주제 문서를 가져옴
 			$titlestr = $title->getTitleValue()->getText();
 			array_push($queryresult, ["pagename" => $titlestr, "votecount" => $row->votecount, "score" => $row->vote_average, "categoryArr" => $title->getParentCategories()]);
 			$query->next();
