@@ -26,9 +26,9 @@ class GetGameRatings extends SimpleHandler {
 		'', '__METHOD__', ['GROUP BY vote_page_id', 'LIMIT ' . $score_num]);
 		
 		$queryresult = [];
-		for ($i = 0 ; $i < $query.count(); $i += 1){
-			array_push($queryresult, $query.current());
-			$query.next();
+		for ($i = 0 ; $i < $query->count(); $i += 1){
+			array_push($queryresult, $query->current());
+			$query->next();
 		}
 		
 		return ["result" => "SUCCESS",
