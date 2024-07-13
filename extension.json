@@ -15,6 +15,7 @@
 			"method": "POST",
 			"class": "Mediawiki\\Extension\\SectionRatings\\RateGame"
 		}
+		
 	],
 	"config":{
 		"SeRaTargetContest": [],

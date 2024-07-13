@@ -14,18 +14,19 @@ class RateGame extends SimpleHandler {
 	
 	public function run( $gamename, $score ) {
 		$score_num = (int) $score;
-		if (score < 1 || score > $wgSeRaTopNumber){
-			return "FAIL";
+		if ($score < 1 || $score > $wgSeRaTopNumber){
+			return ["result" => "FAIL"];
 		} else {
-			return "SUCCESS";
+			return ["result" => "SUCCESS"];
 		}
 	}
 	
 	public function needsWriteAccess() {
-		return true;
+		return false; // TODO: DB 작업을 위해 true로 바꿀 것
 	}
 	
 	public function getParamSettings() {
+		return [
 		'gamename' => [
 			self::PARAM_SOURCE => 'path',
 			ParamValidator::PARAM_TYPE => 'string',
@@ -35,7 +36,8 @@ class RateGame extends SimpleHandler {
 			self::PARAM_SOURCE => 'path',
 			ParamValidator::PARAM_TYPE => 'int',
 			ParamValidator::PARAM_REQUIRED => true,
-		],
+		]
+		];
 	}
 }
 
