@@ -19,11 +19,18 @@ class GetGameRatings extends SimpleHandler {
 	public function run( $category, $count ) {
 		$score_num = (string) $count;
 		$services = MediaWikiServices::getInstance();
-		$dbaseref = wfGetDB(DB_REPLICA);
 		// TODO: After 1.42+, replica DB must be called via $services->getConnectionProvider()->getReplicaDatabase();
+		$dbaseref = wfGetDB(DB_REPLICA);
 		
-		$queryresult = $dbaseref->select('Vote', ['page_id' => 'vote_page_id', 'votecount' => 'COUNT(*)', 'vote_average' => 'AVG(vote_value)'],
+		$query = $dbaseref->select('Vote', ['page_id' => 'vote_page_id', 'votecount' => 'COUNT(*)', 'vote_average' => 'AVG(vote_value)'],
 		'', '__METHOD__', ['GROUP BY vote_page_id', 'LIMIT ' . $score_num]);
+		
+		$queryresult = [];
+		for ($i = 0 ; $i < $query.count(); $i += 1){
+			array_push($queryresult, $query.current());
+			$query.next();
+		}
+		
 		return ["result" => "SUCCESS",
 			"Vote" => $queryresult
 		];
