@@ -32,8 +32,10 @@ class GetGameRatings extends SimpleHandler {
 		for ($i = 0 ; $i < $query->numRows(); $i += 1){
 			$row = $query->current();
 			$title = Title::newFromID((int) $row->page_id)->getSubjectPage(); // 토론 페이지에 위젯이 붙는 것을 가정하고 주제 문서를 가져옴
-			$titlestr = $title->getTitleValue()->getText();
-			array_push($queryresult, ["pagename" => $titlestr, "votecount" => $row->votecount, "score" => $row->vote_average, "categoryArr" => $title->getParentCategories()]);
+			if(in_array($category, array_keys($title->getParentCategories()), true)){ // 카테고리로 필터링
+				$titlestr = $title->getTitleValue()->getText();
+				array_push($queryresult, ["pagename" => $titlestr, "votecount" => $row->votecount, "score" => $row->vote_average]);
+			}
 			$query->next();
 		}
 		
