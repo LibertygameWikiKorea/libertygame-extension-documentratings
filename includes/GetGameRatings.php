@@ -8,6 +8,7 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Rest\SimpleHandler;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\Rdbms\Database;
+use Title;
 
 // GET /sectionratings/v0/getgameratings/{category}/{count} -> 성공/실패 반환
 
