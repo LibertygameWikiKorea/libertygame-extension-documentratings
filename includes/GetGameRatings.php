@@ -40,7 +40,8 @@ class GetGameRatings extends SimpleHandler {
 		}
 		
 		return ["result" => "SUCCESS",
-			"Vote" => $queryresult
+			"Vote" => $queryresult,
+			"httpCode" => 200
 		];
 	}
 	
