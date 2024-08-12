@@ -45,24 +45,23 @@ class GetGameRatings extends SimpleHandler {
 		$parsetarget = $parsetarget . "}}";
 		// Mediawiki 사이트의 Parse API 예제를 가져와 응용함(Licensed under MIT License)
 		$parseResult = "";
-		if ($wgSRAPIParsingUrl != ""){
-			$endPoint = $wgSRAPIParsingUrl + "/api.php";
-			$params = [
-				"action" => "parse",
-				"text" => $parsetarget,
-				"contentmodel" => "wikitext",
-				"format" => "json"
-			];
 
-			$url = $endPoint . "?" . http_build_query( $params );
+		$endPoint = $this->getConfig()->get('Server') + "/api.php";
+		$params = [
+			"action" => "parse",
+			"text" => $parsetarget,
+			"contentmodel" => "wikitext",
+			"format" => "json"
+		];
 
-			$ch = curl_init( $url );
-			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-			$output = curl_exec( $ch );
-			curl_close( $ch );
+		$url = $endPoint . "?" . http_build_query( $params );
 
-			$parseResult = json_decode( $output, true );
-		}
+		$ch = curl_init( $url );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		$output = curl_exec( $ch );
+		curl_close( $ch );
+
+		$parseResult = json_decode( $output, true );
 		return ["result" => "SUCCESS",
 			"Vote" => $queryresult,
 			"parseResult" => $parseResult,

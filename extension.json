@@ -9,12 +9,6 @@
 	"AutoloadNamespaces":{
 		"MediaWiki\\Extension\\SectionRatings\\": "includes/"
 	},
-	"config":{
-		"wgSRAPIParsingUrl":{
-			"value": "",
-			"description": "Request URL for SectionRatings"
-		}
-	},
 	"RestRoutes": [
 		{
 			"path": "/sectionratings/v0/rategame/{game_id}/{score}",
