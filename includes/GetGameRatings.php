@@ -23,7 +23,7 @@ class GetGameRatings extends SimpleHandler {
 		$services = MediaWikiServices::getInstance();
 		// TODO: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
 		$dbaseref = wfGetDB(DB_REPLICA);
-		$parsetarget = "{{게임카드|";
+		$parsetarget = "";
 		
 		// $query는 stdClass 형의 변수임
 		$query = $dbaseref->select('Vote', ['page_id' => 'vote_page_id', 'votecount' => 'COUNT(*)', 'vote_average' => 'AVG(vote_value)'],
@@ -37,12 +37,10 @@ class GetGameRatings extends SimpleHandler {
 				$titlestr = $title->getTitleValue()->getText();
 				array_push($queryresult, ["pagename" => $titlestr, "votecount" => $row->votecount, "score" => $row->vote_average]);
 				// 게임카드 파싱을 위해 파라미터 추가
-				$parsetarget = $parsetarget . $titlestr . ",";
+				$parsetarget = $parsetarget . "{{게임카드|" . $titlestr . "|속성=설명감춤}}";
 			}
 			$query->next();
 		}
-		$parsetarget = substr($parsetarget, 0, -1); // 맨 마지막의 쉼표를 제거, 만일 파라미터가 빈 문자열이면 파이프 문자가 대신 제거됨
-		$parsetarget = $parsetarget . "|속성=설명감춤}}";
 		// Mediawiki 사이트의 Parse API 예제를 가져와 응용함(Licensed under MIT License)
 		$parseResult = "";
 
