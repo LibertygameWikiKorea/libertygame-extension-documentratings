@@ -18,6 +18,9 @@ class RateGame extends SimpleHandler {
 	
 	public function run( $game_id, $score ) {
 		$score_num = (int) $score;
+
+		// TODO: 1.42+ 부터 primary DB는 $services->getConnectionProvider()->getPrimaryDatabase()로 가져와야 한다.
+		$dbaseref = wfGetDB(DB_PRIMARY);
 		
 		if ($score < 1 || $score > 5){
 			return ["result" => "FAIL"];
@@ -28,7 +31,7 @@ class RateGame extends SimpleHandler {
 	}
 	
 	public function needsWriteAccess() {
-		return false; // TODO: DB 작업을 위해 true로 바꿀 것
+		return true;
 	}
 	
 	public function getParamSettings() {
