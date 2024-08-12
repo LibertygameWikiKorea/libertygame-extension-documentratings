@@ -47,7 +47,7 @@ class GetGameRatings extends SimpleHandler {
 		$parseResult = "";
 
 		// TODO: use $wgServer in LocalSettings.php
-		$endPoint = "https://dev.libertygame.work" + "/api.php";
+		$endPoint = "https://dev.libertygame.work" . "/api.php";
 		$params = [
 			"action" => "parse",
 			"text" => $parsetarget,
