@@ -43,28 +43,29 @@ class GetGameRatings extends SimpleHandler {
 		}
 		$parsetarget = substr($parsetarget, 0, -1); // 맨 마지막의 쉼표를 제거, 만일 파라미터가 빈 문자열이면 파이프 문자가 대신 제거됨
 		$parsetarget = $parsetarget . "}}";
-
 		// Mediawiki 사이트의 Parse API 예제를 가져와 응용함(Licensed under MIT License)
-		$endPoint = $wgServer + "/api.php";
-		$params = [
-			"action" => "parse",
-			"text" => $parsetarget,
-			"contentmodel" => "wikitext",
-			"format" => "json"
-		];
+		$parseResult = "";
+		if ($wgSRAPIParsingUrl != ""){
+			$endPoint = $wgSRAPIParsingUrl + "/api.php";
+			$params = [
+				"action" => "parse",
+				"text" => $parsetarget,
+				"contentmodel" => "wikitext",
+				"format" => "json"
+			];
 
-		$url = $endPoint . "?" . http_build_query( $params );
+			$url = $endPoint . "?" . http_build_query( $params );
 
-		$ch = curl_init( $url );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		$output = curl_exec( $ch );
-		curl_close( $ch );
+			$ch = curl_init( $url );
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+			$output = curl_exec( $ch );
+			curl_close( $ch );
 
-		$parseresult = json_decode( $output, true );
-
+			$parseResult = json_decode( $output, true );
+		}
 		return ["result" => "SUCCESS",
 			"Vote" => $queryresult,
-			"parseResult" => $parseresult,
+			"parseResult" => $parseResult,
 			"httpCode" => 200
 		];
 	}
