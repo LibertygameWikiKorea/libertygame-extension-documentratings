@@ -46,7 +46,7 @@ class GetGameRatings extends SimpleHandler {
 		// Mediawiki 사이트의 Parse API 예제를 가져와 응용함(Licensed under MIT License)
 		$parseResult = "";
 
-		$endPoint = $this->getConfig()['Server'] + "/api.php";
+		$endPoint = $this->getConfig()['wgServer'] + "/api.php";
 		$params = [
 			"action" => "parse",
 			"text" => $parsetarget,
