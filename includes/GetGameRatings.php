@@ -42,7 +42,7 @@ class GetGameRatings extends SimpleHandler {
 			$query->next();
 		}
 		$parsetarget = substr($parsetarget, 0, -1); // 맨 마지막의 쉼표를 제거, 만일 파라미터가 빈 문자열이면 파이프 문자가 대신 제거됨
-		$parsetarget = $parsetarget . "}}";
+		$parsetarget = $parsetarget . "|속성=설명감춤}}";
 		// Mediawiki 사이트의 Parse API 예제를 가져와 응용함(Licensed under MIT License)
 		$parseResult = "";
 
@@ -65,7 +65,7 @@ class GetGameRatings extends SimpleHandler {
 		$parseResult = json_decode( $output, true );
 		return ["result" => "SUCCESS",
 			"Vote" => $queryresult,
-			"parseResult" => $parseResult,
+			"parseResult" => $parseResult["parse"]["text"]["*"],
 			"httpCode" => 200
 		];
 	}
