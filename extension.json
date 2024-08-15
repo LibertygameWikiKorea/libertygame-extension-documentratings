@@ -3,18 +3,13 @@
 	"author": "Xen alpha(Senouis)",
 	"url": "https://libertyga.me",
 	"description": "This extension modifies result of database table used by VoteNY extension.",
-	"version": "0.1",
+	"version": "0.2",
 	"license-name": "MIT",
 	"type": "others",
 	"AutoloadNamespaces":{
 		"MediaWiki\\Extension\\SectionRatings\\": "includes/"
 	},
 	"RestRoutes": [
-		{
-			"path": "/sectionratings/v0/rategame/{game_id}/{score}",
-			"method": "POST",
-			"class": "MediaWiki\\Extension\\SectionRatings\\RateGame"
-		},
 		{
 			"path": "/sectionratings/v0/getgameratings/{category}/{count}",
 			"method": "GET",

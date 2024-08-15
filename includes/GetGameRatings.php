@@ -44,8 +44,10 @@ class GetGameRatings extends SimpleHandler {
 		// Mediawiki 사이트의 Parse API 예제를 가져와 응용함(Licensed under MIT License)
 		$parseResult = "";
 
+		$config = ;
+
 		// TODO: use $wgServer in LocalSettings.php
-		$endPoint = "https://dev.libertygame.work" . "/api.php";
+		$endPoint = MediaWikiServices::getInstance()->getMainConfig()->get("Server") . "/api.php";
 		$params = [
 			"action" => "parse",
 			"text" => $parsetarget,

@@ -21,7 +21,7 @@
 ```json
 {
     "result": "SUCCESS", // "FAIL:" 로도 시작할 수 있습니다(예: 너무 많거나 적은 게임 정보 갯수). 이 경우 공백을 '-' 문자로 치환한 한 줄 오류 내용을 담은 "error"가 추가로 전달되어야 합니다.
-    "Vote": [
+    "Vote": [ //3.0 이하의 평가를 가진 게임은 반환하지 않습니다.
         {
             "pagename": "...",
             "votecount": "1",
@@ -34,9 +34,14 @@
         },
         ...
     ],
+	"parseResult" : "
+	   ...  // 리버티게임 게임카드 틀을 파싱한 HTML Element 결과물이 "mw-parser-output" id를 가진 div 태그에 싸인 채로 포함됩니다.
+	",
     "httpCode" : 200 // 오류가 발생할 경우 미디어위키의 내부 코드 정의에 의존합니다(예: 타입 오류시 400)
 }
 ```
+* 주의: 이 
+
 ## rategame(미구현)
 ```(URL)/rest.php/sectionratings/v0/rategame/{게임 이름}/{별점}```
 
