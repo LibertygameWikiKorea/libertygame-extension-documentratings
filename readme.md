@@ -9,8 +9,6 @@
 # 설치 및 사용법
 1. 미디어위키의 extensions 폴더에 git clone합니다. 이때 적절한 폴더 이름(예: SectionRatings)으로 clone하도록 파라미터를 설정하세요
 2. wgLoadExtensions 함수로 LocalSettings.php에서 확장 기능을 로드합니다.
-3. 반드시 ```wgSRAPIParsingUrl```을 위키 도메인(+ 단축 주소)이 되도록 합니다. 이것이 있어야 제대로 동작합니다.
-```예: $wgSRAPIParsingUrl="https://libertyga.me";```
 
 
 # REST API 사용 예시
