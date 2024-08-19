@@ -1,6 +1,5 @@
 # mediawiki-extension-sectionratings
-이 확장기능은 미디어위키 용으로 설계된 VoteNY 확장 기능으로 만든 특정 콘테스트의 데이터베이스 테이블에 임의의 값을 밀어넣거나
-현재 진행 중인 특정 Contest의 상위 n개의 항목에 관한 정보를 JSON 포맷으로 반환합니다.
+이 확장기능은 미디어위키 용으로 설계된 VoteNY 확장 기능으로 만든 특정 콘테스트의 데이터베이스 테이블에서 현재 평균 별점 상위 n개의 항목에 관한 정보를 JSON 포맷으로 반환합니다.
 
 이 확장 기능은 [리버티게임 위키](https://libertyga.me) 내에서 사용할 목적으로 만들어졌습니다.
 
@@ -13,7 +12,7 @@
 
 # REST API 사용 예시
 ## getgameratings
-```(URL)/rest.php/sectionratings/v0/getgameratings/{분류 이름}/{불러올 갯수}```
+```(URL)/rest.php/sectionratings/v0/ratings/{분류 이름}/{불러올 갯수}```
 
 반환값은 다음과 같습니다.
 ```json
@@ -38,20 +37,8 @@
     "httpCode" : 200 // 오류가 발생할 경우 미디어위키의 내부 코드 정의에 의존합니다(예: 타입 오류시 400)
 }
 ```
-* 주의: 이 
+* 주의: parseResult는 미디어위키 Parse API 제한으로 인해 최대 50개의 게임만 표시합니다! 그 이상 표시하려 시도할 경우 null을 대신 반환합니다.
 
-## rategame(미구현)
-```(URL)/rest.php/sectionratings/v0/rategame/{게임 이름}/{별점}```
-
-반환값은 다음과 같습니다.
-
-```json
-{
-    "result": "SUCCESS", // "FAIL:" 로도 시작할 수 있습니다(예: 존재하지 않는 게임에 대해 평가)
-    "httpCode" : 200 // 입력 오류로 push에 실패할 경우 400이 되며, httpReason이 추가로 전달됩니다(Bad Request)
-    // 그 외의 오류가 발생할 경우 미디어위키의 내부 코드 정의에 의존합니다(예: 타입 오류시 400)
-}
-```
 # prerequisites
  Mediawiki >= 1.37.0, < 1.42.0
  미디어위키 extensions 폴더 내에 VoteNY 확장 기능 설치 필수

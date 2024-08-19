@@ -11,7 +11,7 @@
 	},
 	"RestRoutes": [
 		{
-			"path": "/sectionratings/v0/getgameratings/{category}/{count}",
+			"path": "/sectionratings/v0/ratings/{category}/{count}",
 			"method": "GET",
 			"class": "MediaWiki\\Extension\\SectionRatings\\GetGameRatings"
 		}

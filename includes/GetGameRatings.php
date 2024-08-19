@@ -10,7 +10,7 @@ use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\Rdbms\Database;
 use Title;
 
-// GET /sectionratings/v0/getgameratings/{category}/{count} -> 성공/실패 반환
+// GET /sectionratings/v0/ratings/{category}/{count} -> 성공/실패 반환
 
 // class
 class GetGameRatings extends SimpleHandler {
