@@ -11,7 +11,7 @@
 
 
 # REST API 사용 예시
-## getgameratings
+## get game ratings
 ```(URL)/rest.php/sectionratings/v0/ratings/{분류 이름}/{불러올 갯수}```
 
 반환값은 다음과 같습니다.
@@ -19,7 +19,7 @@
 {
     "result": "SUCCESS", // "FAIL:" 로도 시작할 수 있습니다(예: 너무 많거나 적은 게임 정보 갯수). 이 경우 공백을 '-' 문자로 치환한 한 줄 오류 내용을 담은 "error"가 추가로 전달되어야 합니다.
     "category": "...", // 분류 이름
-    "vote": [ //3.0 이하의 평가를 가진 게임은 반환하지 않습니다.
+    "gamelist": [ //3.0 이하의 평가를 가진 게임은 반환하지 않습니다.
         {
             "pagename": "...",
             "votecount": "1",
@@ -35,7 +35,8 @@
 	"parseResult" : "
 	   ...  // 리버티게임 게임카드 틀을 파싱한 HTML Element 결과물이 "mw-parser-output" id를 가진 div 태그에 싸인 채로 포함됩니다.
 	",
-    "httpCode" : 200 // 오류가 발생할 경우 미디어위키의 내부 코드 정의에 의존합니다(예: 타입 오류시 400)
+    "httpCode" : 200 // 오류가 발생할 경우 미디어위키의 내부 코드 정의에 의존합니다(예: 타입 오류시 400),
+    "httpReason" : "OK"
 }
 ```
 * 주의: parseResult는 미디어위키 Parse API 제한으로 인해 최대 50개의 게임만 표시합니다! 그 이상 표시하려 시도할 경우 null을 대신 반환합니다.
