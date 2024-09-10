@@ -63,7 +63,7 @@ class GetGameRatings extends SimpleHandler {
 		$parseResult = json_decode( $output, true );
 		return ["result" => "SUCCESS",
 			"category" => $category,
-			"vote" => $queryresult,
+			"gameList" => $queryresult,
 			"parseResult" => $parseResult["parse"]["text"]["*"],
 			"httpCode" => 200,
 			"httpReason" => "OK"
