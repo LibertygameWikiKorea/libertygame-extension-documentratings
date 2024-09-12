@@ -1,26 +1,26 @@
 {
-	"name": "SectionRatings",
-	"author": "Xen alpha(Senouis)",
-	"url": "https://libertyga.me",
-	"description": "This extension modifies result of database table used by VoteNY extension.",
-	"version": "0.3",
-	"license-name": "MIT",
-	"type": "others",
-	"AutoloadNamespaces":{
-		"MediaWiki\\Extension\\SectionRatings\\": "includes/"
-	},
-	"RestRoutes": [
-		{
-			"path": "/sectionratings/v0/ratings/{category}/{count}",
-			"method": "GET",
-			"class": "MediaWiki\\Extension\\SectionRatings\\GetGameRatings"
-		}
-	],
-	"manifest_version": 2,
-	"requires": {
-		"MediaWiki": ">= 1.37.0",
-		"extensions" : {
-			"VoteNY": "*"
-		}
-	}
+  "name": "SectionRatings",
+  "author": "Xen alpha(Senouis)",
+  "url": "https://libertyga.me",
+  "description": "This extension modifies result of database table used by VoteNY extension.",
+  "version": "0.3.0",
+  "license-name": "MIT",
+  "type": "others",
+  "AutoloadNamespaces": {
+    "MediaWiki\\Extension\\SectionRatings\\": "includes/"
+  },
+  "RestRoutes": [
+    {
+      "path": "/sectionratings/v0/ratings/{category}/{count}",
+      "method": "GET",
+      "class": "MediaWiki\\Extension\\SectionRatings\\GetGameRatings"
+    }
+  ],
+  "manifest_version": 2,
+  "requires": {
+    "MediaWiki": ">= 1.37.0",
+    "extensions": {
+      "VoteNY": "*"
+    }
+  }
 }
