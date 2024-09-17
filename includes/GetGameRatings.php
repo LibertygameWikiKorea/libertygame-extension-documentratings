@@ -26,19 +26,18 @@ class GetGameRatings extends SimpleHandler {
 		$parsetarget = "";
 		
 		// $query는 stdClass 형의 변수임
-		$query = $dbaseref->select('Vote', ['page_id' => 'vote_page_id', 'votecount' => 'COUNT(*)', 'vote_average' => 'AVG(vote_value)'],
-		'', '__METHOD__', ['GROUP BY' => 'vote_page_id', 'HAVING' => 'vote_average >= 3 AND votecount >= 2', 'ORDER BY' => 'vote_average DESC, votecount DESC','LIMIT' => $count ]);
-		
+		$query = $dbaseref->select('categorylinks INNER JOIN Vote ON categorylinks.cl_from Vote.vote_page_id', ['page_id' => 'Vote.vote_page_id', 'votecount' => 'COUNT(Vote.vote_value)', 'vote_average' => 'AVG(Vote.vote_value)'],
+		'', '__METHOD__', ['GROUP BY' => 'Vote.vote_page_id', 'HAVING' => 'vote_average >= 3 AND votecount >= 2', 'ORDER BY' => 'vote_average DESC, votecount DESC','LIMIT' => $count ]);
+		// 카테고리로 필터링 + 평점 3 이상만 결과로 반환 + 자기 추천 방지를 위한 2명 이상의 평가 요구
+
 		$queryresult = [];
 		for ($i = 0 ; $i < $query->numRows(); $i += 1){
 			$row = $query->current();
-			$title = Title::newFromID((int) $row->page_id)->getSubjectPage(); // 토론 페이지에 위젯이 붙는 것을 가정하고 주제 문서를 가져옴
-			if(in_array($category, array_keys($title->getParentCategories()), true) && (int) $row->vote_average >= 3 && (int) $row->votecount >= 2){ // 카테고리로 필터링 + 평점 3 이상만 결과로 반환 + 자기 추천 방지를 위한 2명 이상의 평가 요구
-				$titlestr = $title->getTitleValue()->getText();
-				array_push($queryresult, ["pagename" => $titlestr, "votecount" => $row->votecount, "score" => $row->vote_average]);
-				// 게임카드 파싱을 위해 파라미터 추가
-				$parsetarget = $parsetarget . "{{게임카드|" . $titlestr . "|속성=설명감춤}}";
-			}
+			$title = Title::newFromID((int) $row->page_id)->getSubjectPage(); // 토론 페이지에 위젯이 붙는 것을 가정하고 본문 문서를 가져옴
+			$titlestr = $title->getTitleValue()->getText();
+			array_push($queryresult, ["pagename" => $titlestr, "votecount" => $row->votecount, "score" => $row->vote_average]);
+			// 게임카드 파싱을 위해 파라미터 추가
+			$parsetarget = $parsetarget . "{{게임카드|" . $titlestr . "|속성=설명감춤}}";
 			$query->next();
 		}
 		// Mediawiki 사이트의 Parse API 예제를 가져와 응용함(Licensed under MIT License)
