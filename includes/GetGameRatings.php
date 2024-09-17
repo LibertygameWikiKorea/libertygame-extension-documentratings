@@ -27,7 +27,7 @@ class GetGameRatings extends SimpleHandler {
 		
 		// $query는 stdClass 형의 변수임
 		$query = $dbaseref->select('Vote', ['page_id' => 'vote_page_id', 'votecount' => 'COUNT(*)', 'vote_average' => 'AVG(vote_value)'],
-		'', '__METHOD__', ['GROUP BY' => 'vote_page_id', 'ORDER BY' => 'vote_average DESC, votecount DESC','LIMIT' => $count ]);
+		'vote_average >= 3 AND votecount >= 2', '__METHOD__', ['GROUP BY' => 'vote_page_id', 'ORDER BY' => 'vote_average DESC, votecount DESC','LIMIT' => $count ]);
 		
 		$queryresult = [];
 		for ($i = 0 ; $i < $query->numRows(); $i += 1){
