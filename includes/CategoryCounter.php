@@ -30,7 +30,7 @@ class CategoryCounter extends SimpleHandler {
 		$query = $dbaseref->select('categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id', ['count' => 'COUNT(page.page_id)', ],
 		'categorylinks.cl_type = \'page\' AND categorylinks.cl_to = "' . $category . '" AND page.page_namespace = '. $namespace , '__METHOD__', []);
 
-		$qResult = $query->current()->votecount;
+		$qResult = $query->current()->count;
 		return ["result" => "SUCCESS",
 			"category" => $category,
 			"count" => $qResult,
