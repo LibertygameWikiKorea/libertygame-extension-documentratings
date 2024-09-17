@@ -33,7 +33,7 @@ class GetGameRatings extends SimpleHandler {
 		for ($i = 0 ; $i < $query->numRows(); $i += 1){
 			$row = $query->current();
 			$title = Title::newFromID((int) $row->page_id)->getSubjectPage(); // 토론 페이지에 위젯이 붙는 것을 가정하고 주제 문서를 가져옴
-			if(in_array($category, array_keys($title->getParentCategories()), true) && (int) $row->vote_average >= 3){ // 카테고리로 필터링 + 평점 3 이상만 결과로 반환
+			if(in_array($category, array_keys($title->getParentCategories()), true) && (int) $row->vote_average >= 3 && (int) $row->vote_count >= 2){ // 카테고리로 필터링 + 평점 3 이상만 결과로 반환 + 자기 추천 방지를 위한 2명 이상의 평가 요구
 				$titlestr = $title->getTitleValue()->getText();
 				array_push($queryresult, ["pagename" => $titlestr, "votecount" => $row->votecount, "score" => $row->vote_average]);
 				// 게임카드 파싱을 위해 파라미터 추가
