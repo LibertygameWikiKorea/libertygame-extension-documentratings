@@ -28,7 +28,7 @@ class CategoryCounter extends SimpleHandler {
 		
 		// $query는 stdClass 형의 변수임
 		$query = $dbaseref->select('categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id', ['count' => 'COUNT(page.page_id)', ],
-		'categorylinks.cl_to = "' . $category . '" AND page.page_namespace = '. (string) $namespace , '__METHOD__', []);
+		'categorylinks.cl_type = \'page\' AND categorylinks.cl_to = "' . $category . '" AND page.page_namespace = '. $namespace , '__METHOD__', []);
 
 		$qResult = $query->current()->votecount;
 		return ["result" => "SUCCESS",
@@ -53,7 +53,7 @@ class CategoryCounter extends SimpleHandler {
 			],
 			'namespace' => [
 				self::PARAM_SOURCE => 'path',
-				ParamValidator::PARAM_TYPE => 'integer',
+				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
 			],
 		];
