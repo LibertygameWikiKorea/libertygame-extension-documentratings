@@ -3,7 +3,7 @@
   "author": "Xen alpha(Senouis)",
   "url": "https://libertyga.me",
   "description": "This extension modifies result of database table used by VoteNY extension.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "license-name": "MIT",
   "type": "others",
   "AutoloadNamespaces": {
