@@ -6,14 +6,21 @@
 
 그래서 영어가 아닌 한국어로 도큐먼트가 제공됩니다.
 
-# 설치 및 사용법
+# 설치
 
 1. 미디어위키의 extensions 폴더에 git clone합니다. 이때 적절한 폴더 이름(예: SectionRatings)으로 clone하도록 파라미터를 설정하세요
 2. wgLoadExtensions 함수로 LocalSettings.php에서 확장 기능을 로드합니다.
+3. 아래 '사전 작업'을 필요한 만큼 시행합니다.
+## 사전 작업
+* 먼저 '틀:게임카드'(Template:게임카드)라는 이름의 틀 문서를 위키 사이트 내에 만듭니다. 이 틀에는 당신이 탐색할 문서(본문)에 딸린 토론 문서에 붙은 분류에 따라 본문에 대한 정보를 보여줘야 합니다. 이 틀이 없으면 해당 틀 문서로 가는 없는 페이지 링크가 미디어위키 문서 파싱 결과로 반환되므로, 게임카드 틀 렌더링 없이 단순히 목록 데이터만 얻어올 것이라면 만들지 않아도 됩니다.
+  * 여기서 본문 문서는 짝수 ID를 가지는 이름 공간(Main, Project, User, Template, etc.), 토론 문서는 홀수 ID를 가지는 이름공간(예: Talk, User Talk, Project Talk, Template Talk, etc.)을 말합니다.
+* 원하는 문서에 딸린 '토론 문서'에 원하는 분류와 VoteNY 별점 위젯을 삽입하고 저장합니다.
+* 위젯으로 별점 평가를 토론 문서에 대해 시행합니다.
 
 # REST API 사용 예시
 
 ## get game ratings
+아래의 REST API 요청을 시행하면 토론 문서를 탐색한 후 본문 문서에 대한 정보를 담은 게임카드 틀에 대한 DOM 렌더링 결과를 반환합니다.
 
 `(URL)/rest.php/sectionratings/v0/ratings/{분류 이름}/{불러올 갯수}`
 
@@ -47,6 +54,7 @@
 - 주의: parseResult는 미디어위키 Parse API 제한으로 인해 최대 50개의 게임만 표시합니다! 그 이상 표시하려 시도할 경우 null을 대신 반환합니다.
 
 ## categorycounter
+어떤 분류(들)에 해당하는 문서가 특정 이름공간에 몇 개 있는지 결과 목록을 반환하는 API입니다. 다음과 같이 호출합니다. 
 
 `(URL)/rest.php/sectionratings/v0/categorycounter/{분류 이름, |(파이프 문자)로 구분하여 여러개를 반환}/{네임스페이스 번호}`
 
