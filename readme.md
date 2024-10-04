@@ -75,6 +75,8 @@ Mediawiki >= 1.37.0, < 1.42.0
   "httpReason": "OK"
 }
 ```
+# 개발 기록
+* [링크](https://scandalous-aletopelta-300.notion.site/PHP-40cb8844095240daaac0a846f0d31c58)
 
 # COPYRIGHTS
 
