@@ -6,6 +6,10 @@
 
 그래서 영어가 아닌 한국어로 도큐먼트가 제공됩니다.
 
+# 설치 조건
+Mediawiki >= 1.37.0, < 1.42.0
+미디어위키 extensions 폴더 내에 [VoteNY](https://www.mediawiki.org/wiki/Extension:VoteNY) 확장 기능 설치 필수
+
 # 설치
 
 1. 미디어위키의 extensions 폴더에 git clone합니다. 이때 적절한 폴더 이름(예: SectionRatings)으로 clone하도록 파라미터를 설정하세요
@@ -18,6 +22,7 @@
 * 위젯으로 별점 평가를 토론 문서에 대해 시행합니다.
 
 # REST API 사용 예시
+* 참고: 미디어위키의 rest.php는 별도의 HTTP 헤더를 지정하지 않고, 입력 데이터를 엔드포인트 형태의 파라미터로 명시하도록 되어 있습니다.
 
 ## get game ratings
 아래의 REST API 요청을 시행하면 토론 문서를 탐색한 후 본문 문서에 대한 정보를 담은 게임카드 틀에 대한 DOM 렌더링 결과를 반환합니다.
@@ -70,13 +75,6 @@
   "httpReason": "OK"
 }
 ```
-
-# prerequisites
-
-Mediawiki >= 1.37.0, < 1.42.0
-미디어위키 extensions 폴더 내에 VoteNY 확장 기능 설치 필수
-
-[VoteNY](https://www.mediawiki.org/wiki/Extension:VoteNY) extension required
 
 # COPYRIGHTS
 
