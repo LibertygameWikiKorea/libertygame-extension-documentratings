@@ -26,9 +26,9 @@ class GetGameRatings extends SimpleHandler {
 		$parsetarget = "";
 		
 		// $query는 stdClass 형의 변수임
-		$query = $dbaseref->select('categorylinks INNER JOIN Vote ON categorylinks.cl_from = Vote.vote_page_id', ['page_id' => 'Vote.vote_page_id', 'votecount' => 'COUNT(Vote.vote_value)', 'vote_average' => 'AVG(Vote.vote_value)'],
-		'categorylinks.cl_to = "' . $category . '"', '__METHOD__', ['GROUP BY' => 'Vote.vote_page_id', 'HAVING' => 'vote_average >= 3 AND votecount >= 2', 'ORDER BY' => 'vote_average DESC, votecount DESC','LIMIT' => $count ]);
-		// 카테고리로 필터링 + 평점 3 이상만 결과로 반환 + 자기 추천 방지를 위한 2명 이상의 평가 요구
+		$query = $dbaseref->select('categorylinks INNER JOIN Vote ON categorylinks.cl_from = Vote.vote_page_id', ['page_id' => 'Vote.vote_page_id', 'votecount' => 'COUNT(Vote.vote_value)', 'vote_average' => 'COUNT(Vote.vote_value)*AVG(Vote.vote_value-3)'],
+		'categorylinks.cl_to = "' . $category . '"', '__METHOD__', ['GROUP BY' => 'Vote.vote_page_id', 'HAVING' => 'vote_average >= 0 AND votecount >= 2', 'ORDER BY' => 'vote_average DESC, votecount DESC','LIMIT' => $count ]);
+		// 카테고리로 필터링 + (평균) * (투표수)인 '총점'이 0 이상만 결과로 반환 + 자기 추천 방지를 위한 2명 이상의 평가 요구
 
 		$queryresult = [];
 		for ($i = 0 ; $i < $query->numRows(); $i += 1){
