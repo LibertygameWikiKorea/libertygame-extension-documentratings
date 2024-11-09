@@ -44,7 +44,8 @@ class GetGameRatings extends SimpleHandler {
 		$parseResult = "";
 
 		// TODO: use $wgServer in LocalSettings.php
-		$endPoint = MediaWikiServices::getInstance()->getMainConfig()->get("Server") . "/api.php";
+		// $endPoint = MediaWikiServices::getInstance()->getMainConfig()->get("Server") . "/api.php";
+    $endPoint = "https://localhost/api.php";
 		$params = [
 			"action" => "parse",
 			"text" => $parsetarget,
