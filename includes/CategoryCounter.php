@@ -14,7 +14,7 @@ use Title;
 
 // class
 class CategoryCounter extends SimpleHandler {
-	
+	const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(|\)|@|;|\'|\"|*|\+|\-|\/|#]+/';
 	public function run( $category, $namespace ) {
 		if ($namespace < 0) {
 			return ["result" => "FAIL: namespace pararmeter is out of bound(non-negative)",
@@ -22,6 +22,16 @@ class CategoryCounter extends SimpleHandler {
 				"httpReason" => "Bad Request"
 			];
 		}
+
+    // Prevent SQL Injection
+    if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1) {
+      return [
+              "result" => "FAIL: invalid character(s) found in parameters",
+              "httpCode" => 400,
+              "httpReason" => "Bad Request"
+            ];
+    }
+
 		$services = MediaWikiServices::getInstance();
 		// TODO: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
 		$dbaseref = wfGetDB(DB_REPLICA);

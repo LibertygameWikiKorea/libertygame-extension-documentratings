@@ -12,13 +12,30 @@ use Title;
 
 // GET /sectionratings/v0/ratings/{category}/{count} -> 성공/실패 반환
 
+// enum
+
+
 // class
 class GetGameRatings extends SimpleHandler {
-	
+  const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(|\)|@|;|\'|\"|*|\+|\-|\/|#]+/';
+
 	public function run( $category, $count ) {
 		if ($count < 1 || $count > 100) {
-			return ["result" => "FAIL: count pararmeter is out of bound"];
+			return [
+              "result" => "FAIL: count pararmeter is out of bound",
+              "httpCode" => 400,
+              "httpReason" => "Bad Request"
+             ];
 		}
+    // Prevent SQL Injection
+    if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1) {
+      return [
+              "result" => "FAIL: invalid character(s) found in parameters",
+              "httpCode" => 400,
+              "httpReason" => "Bad Request"
+            ];
+    }
+
 		$score_num = (string) $count;
 		$services = MediaWikiServices::getInstance();
 		// TODO: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
