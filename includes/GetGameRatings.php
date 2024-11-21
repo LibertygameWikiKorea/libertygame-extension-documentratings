@@ -20,7 +20,7 @@ class GetGameRatings extends SimpleHandler {
   const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(|\)|@|;|\'|\"|*|\+|\/|#]+/';
 
 	public function run( $category, $count ) {
-    if ($category === "") {
+    if (strcmp($category, "") === 0) {
       return [
         "result" => "FAIL: category parameter is empty",
         "httpCode" => 400,

@@ -16,7 +16,7 @@ use Title;
 class CategoryCounter extends SimpleHandler {
 	const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(|\)|@|;|\'|\"|*|\+|\/|#]+/';
 	public function run( $category, $namespace ) {
-    if ($category === "") {
+    if (strcmp($category, "") === 0) {
       return [
         "result" => "FAIL: category parameter is empty",
         "httpCode" => 400,
