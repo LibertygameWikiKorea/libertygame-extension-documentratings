@@ -17,7 +17,7 @@ use Title;
 
 // class
 class GetGameRatings extends SimpleHandler {
-  const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(|\)|@|;|\'|\"|*|\+|(\-\-)|\/|#]+/';
+  const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(|\)|@|;|\'|\"|*|\+|[\-]{2,}|\/|#]+/';
 
 	public function run( $category, $count ) {
 		if ($count < 1 || $count > 100) {
