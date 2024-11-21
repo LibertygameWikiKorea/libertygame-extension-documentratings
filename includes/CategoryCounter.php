@@ -14,7 +14,7 @@ use Title;
 
 // class
 class CategoryCounter extends SimpleHandler {
-	const REGEX_STRING_PREVENT_SQL_INJECTION = '/(;|\'|\"|*|+|-|\/|#)+/';
+	const REGEX_STRING_PREVENT_SQL_INJECTION = '/(;|\'|\"|*|\+|\-|\/|#)+/';
 	public function run( $category, $namespace ) {
 		if ($namespace < 0) {
 			return ["result" => "FAIL: namespace pararmeter is out of bound(non-negative)",
