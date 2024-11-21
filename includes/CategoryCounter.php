@@ -14,7 +14,7 @@ use Title;
 
 // class
 class CategoryCounter extends SimpleHandler {
-	const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(|\)|@|;|\'|\"|*|\+|\-|\/|#]+/';
+	const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(|\)|@|;|\'|\"|*|\+|\/|#]+/';
 	public function run( $category, $namespace ) {
 		if ($namespace < 0) {
 			return ["result" => "FAIL: namespace pararmeter is out of bound(non-negative)",
@@ -24,7 +24,7 @@ class CategoryCounter extends SimpleHandler {
 		}
 
     // Prevent SQL Injection
-    if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1) {
+    if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1 || preg_match('/[\-]{2,}/', $category) == 1) {
       return [
               "result" => "FAIL: invalid character(s) found in parameters",
               "httpCode" => 400,
