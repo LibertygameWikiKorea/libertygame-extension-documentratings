@@ -28,7 +28,9 @@ class GetGameRatings extends SimpleHandler {
              ];
 		}
     // Prevent SQL Injection
-    if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1) {
+    $condFilter = preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category);
+    // Prevent SQL Injection
+    if ( $condFilter == 1) {
       return [
               "result" => "FAIL: invalid character(s) found in parameters",
               "httpCode" => 400,
@@ -82,7 +84,8 @@ class GetGameRatings extends SimpleHandler {
 			"gameList" => $queryresult,
 			"parseResult" => $parseResult["parse"]["text"]["*"],
 			"httpCode" => 200,
-			"httpReason" => "OK"
+			"httpReason" => "OK",
+      "cond" => $condFilter
 		];
 	}
 	

@@ -22,9 +22,9 @@ class CategoryCounter extends SimpleHandler {
 				"httpReason" => "Bad Request"
 			];
 		}
-
+    $condFilter = preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category);
     // Prevent SQL Injection
-    if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1) {
+    if ( $condFilter == 1) {
       return [
               "result" => "FAIL: invalid character(s) found in parameters",
               "httpCode" => 400,
@@ -51,7 +51,8 @@ class CategoryCounter extends SimpleHandler {
 			"count" => $resultarr,
 			"namespace" => $namespace,
 			"httpCode" => 200,
-			"httpReason" => "OK"
+			"httpReason" => "OK",
+      "cond" => $condFilter
 		];
 	}
 	
