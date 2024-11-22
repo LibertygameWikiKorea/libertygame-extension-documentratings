@@ -67,7 +67,8 @@ class GetGameRatings extends SimpleHandler {
 		// Mediawiki 사이트의 Parse API 예제를 가져와 응용함(Licensed under MIT License)
 		$parseResult = "";
 
-		$endPoint = "https://127.0.0.1/api.php"; // wgServer를 가져오는 것은 DNS 요청 트래픽 때문에 별로 좋은 생각이 아니다.
+		// TODO: use $wgServer in LocalSettings.php
+		$endPoint = MediaWikiServices::getInstance()->getMainConfig()->get("Server") . "/api.php";
 		$params = [
 			"action" => "parse",
 			"text" => $parsetarget,
