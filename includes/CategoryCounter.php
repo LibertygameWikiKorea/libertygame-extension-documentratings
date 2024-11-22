@@ -14,7 +14,7 @@ use Title;
 
 // class
 class CategoryCounter extends SimpleHandler {
-	const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(|\)|@|;|\'|\"|*|\+|\/|#]+/';
+	const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(\)@;\'\"*\+\/#]+/';
 	public function run( $category, $namespace ) {
     if (strcmp($category, "") === 0) {
       return [
