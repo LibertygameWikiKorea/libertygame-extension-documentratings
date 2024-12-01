@@ -23,14 +23,14 @@ class GetGameRatings extends SimpleHandler {
 	public function run( $category, $count ) {
     $response = SimpleHandler::getResponseFactory();
     if (strcmp($category, "") === 0) {
-       return $response.createHttpError(400, [
+       return $response->createHttpError(400, [
         "result" => "FAIL: category parameter is empty",
         "httpCode" => 400,
         "httpReason" => "Bad Request"
        ]);
     }
 		if ($count < 1 || $count > 100) {
-			return $response.createHttpError(400, [
+			return $response->createHttpError(400, [
         "result" => "FAIL: count pararmeter is out of bound",
         "httpCode" => 400,
         "httpReason" => "Bad Request"
@@ -38,7 +38,7 @@ class GetGameRatings extends SimpleHandler {
 		}
     // Prevent SQL Injection
     if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1 || preg_match('/[\-]{2,}/', $category) == 1) {
-      return $response.createHttpError(400, [
+      return $response->createHttpError(400, [
               "result" => "FAIL: invalid parameters",
               "httpCode" => 400,
               "httpReason" => "Bad Request"
