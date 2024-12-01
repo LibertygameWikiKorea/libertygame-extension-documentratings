@@ -6,6 +6,7 @@ namespace MediaWiki\Extension\SectionRatings;
 use ApiBase;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Rest\SimpleHandler;
+use MediaWiki\Rest\ResponseFactory;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\Rdbms\Database;
 use Title;
@@ -20,27 +21,28 @@ class GetGameRatings extends SimpleHandler {
   const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(\)@;\'\"*\+\/#]+/';
 
 	public function run( $category, $count ) {
+    $response = SimpleHandler::getResponseFactory();
     if (strcmp($category, "") === 0) {
-      return [
+       return $response->createHttpError(400, [
         "result" => "FAIL: category parameter is empty",
         "httpCode" => 400,
         "httpReason" => "Bad Request"
-       ];
+       ]);
     }
 		if ($count < 1 || $count > 100) {
-			return [
+			return $response->createHttpError(400, [
         "result" => "FAIL: count pararmeter is out of bound",
         "httpCode" => 400,
         "httpReason" => "Bad Request"
-        ];
+       ]);
 		}
     // Prevent SQL Injection
     if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1 || preg_match('/[\-]{2,}/', $category) == 1) {
-      return [
-              "result" => "FAIL: invalid character(s) found in parameters",
+      return $response->createHttpError(400, [
+              "result" => "FAIL: invalid parameters",
               "httpCode" => 400,
               "httpReason" => "Bad Request"
-            ];
+             ]);
     }
 
 		$score_num = (string) $count;

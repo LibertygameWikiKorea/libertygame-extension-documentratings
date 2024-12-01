@@ -6,6 +6,7 @@ namespace MediaWiki\Extension\SectionRatings;
 use ApiBase;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Rest\SimpleHandler;
+use MediaWiki\Rest\ResponseFactory;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\Rdbms\Database;
 use Title;
@@ -16,28 +17,30 @@ use Title;
 class CategoryCounter extends SimpleHandler {
 	const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(\)@;\'\"*\+\/#]+/';
 	public function run( $category, $namespace ) {
+    $response = SimpleHandler::getResponseFactory();
     if (strcmp($category, "") === 0) {
-      return [
+      return $response->createHttpError(400, [
         "result" => "FAIL: category parameter is empty",
         "httpCode" => 400,
         "httpReason" => "Bad Request"
-       ];
+       ]);
     }
 
 		if ($namespace < 0) {
-			return ["result" => "FAIL: namespace pararmeter is out of bound(non-negative)",
-				"httpCode" => 400,
-				"httpReason" => "Bad Request"
-			];
+			return $response->createHttpError(400, [
+        "result" => "FAIL: namespace pararmeter is out of bound(non-negative)",
+        "httpCode" => 400,
+        "httpReason" => "Bad Request"
+       ]);
 		}
 
     // Prevent SQL Injection
     if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1 || preg_match('/[\-]{2,}/', $category) == 1) {
-      return [
+      return $response->createHttpError(400, [
               "result" => "FAIL: invalid character(s) found in parameters",
               "httpCode" => 400,
               "httpReason" => "Bad Request"
-            ];
+             ]);
     }
 
 		$services = MediaWikiServices::getInstance();
