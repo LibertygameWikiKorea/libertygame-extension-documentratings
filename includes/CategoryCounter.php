@@ -17,7 +17,7 @@ use Title;
 class CategoryCounter extends SimpleHandler {
 	const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(\)@;\'\"*\+\/#]+/';
 	public function run( $category, $namespace ) {
-    $response = getResponseFactory();
+    $response = SimpleHandler::getResponseFactory();
     if (strcmp($category, "") === 0) {
       return $response.createHttpError(400, [
         "result" => "FAIL: category parameter is empty",
