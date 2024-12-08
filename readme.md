@@ -1,4 +1,4 @@
-# mediawiki-extension-sectionratings
+# mediawiki-extension-DocumentRatings(구 sectionratings)
 
 이 확장기능은 미디어위키 용으로 설계된 VoteNY 확장 기능으로 만든 특정 콘테스트의 데이터베이스 테이블에서 현재 3.0 이상의 평균 별점 상위 n개의 항목에 관한 정보를 JSON 포맷으로 반환합니다. 또, 특정 이름 공간 내 특정 분류가 달린 문서의 수를 세는 보조 기능도 가지고 있습니다.
 
@@ -8,12 +8,12 @@
 
 # 설치 및 사용법
 
-1. 미디어위키의 extensions 폴더에 git clone합니다. 이때 적절한 폴더 이름(예: SectionRatings)으로 clone하도록 파라미터를 설정하세요
+1. 미디어위키의 extensions 폴더에 git clone합니다. 이때 적절한 폴더 이름(예: DocumentRatings)으로 clone하도록 파라미터를 설정하세요
 2. wgLoadExtensions 함수로 LocalSettings.php에서 확장 기능을 로드합니다.
 
 # REST API 사용 예시
 
-## get game ratings
+## get document ratings
 
 `(URL)/rest.php/sectionratings/v0/ratings/{분류 이름}/{불러올 갯수}`
 
@@ -76,7 +76,7 @@ Maintainer: Xen-alpha
 Licensed under the MIT License
 
 ```
-Copyright (c) 2024 Maniac Xena(Metagen)
+Copyright (c) 2024 Maniac Xena(Metagen, senouis)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
