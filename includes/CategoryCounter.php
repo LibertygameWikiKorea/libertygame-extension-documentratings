@@ -45,7 +45,7 @@ class CategoryCounter extends SimpleHandler {
 
 		$services = MediaWikiServices::getInstance();
 		// TODO: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
-		$dbaseref = wfGetDB(DB_REPLICA);
+		$dbaseref = $services->getDBLoadBalancer()->getConnection( DB_REPLICA );
 
 		$resultarr = [];
 
