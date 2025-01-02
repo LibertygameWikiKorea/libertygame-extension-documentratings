@@ -52,7 +52,7 @@ class GetGameRatings extends SimpleHandler {
 		$parsetarget = "";
 		
 		// $query는 stdClass 형의 변수임
-		$query = $dbase->query('SELECT Vote.vote_page_id as page_id, COUNT(Vote.vote_value) as votecount, AVG(Vote.vote_value) as vote_average FROM categorylinks INNER JOIN Vote ON categorylinks.cl_from = Vote.vote_page_id AND categorylinks.cl_to = "' . $category . '" GROUP BY Vote.vote_page_id HAVING vote_average >= 3 AND votecount >= 2 ORDER BY vote_average DESC, votecount DESC LIMIT'. $count .';');
+		$query = $dbase->query('SELECT Vote.vote_page_id as page_id, COUNT(Vote.vote_value) as votecount, AVG(Vote.vote_value) as vote_average FROM categorylinks INNER JOIN Vote ON categorylinks.cl_from = Vote.vote_page_id WHERE categorylinks.cl_to = "' . $category . '" GROUP BY Vote.vote_page_id HAVING vote_average >= 3 AND votecount >= 2 ORDER BY vote_average DESC, votecount DESC LIMIT'. $count .';');
 		// 카테고리로 필터링 + 평점 3 이상만 결과로 반환 + 자기 추천 방지를 위한 2명 이상의 평가 요구
 
 		$queryresult = [];
