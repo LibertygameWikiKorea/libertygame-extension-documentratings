@@ -52,9 +52,7 @@ class CategoryCounter extends SimpleHandler {
 		$category = explode("|", $category);
 		foreach ($category as $c){
 			// $query는 stdClass 형의 변수임
-			$query = $dbaseref->select('categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id', ['count' => 'COUNT(page.page_id)', ],
-			'categorylinks.cl_type = \'page\' AND categorylinks.cl_to = "' . $c . '" AND page.page_namespace = '. $namespace , '__METHOD__', []);
-
+			$query = $dbase->query('SELECT COUNT(page.page_id) as count, COUNT(Vote.vote_value) as votecount, AVG(Vote.vote_value) as vote_average FROM categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id AND categorylinks.cl_type = \'page\' AND categorylinks.cl_to = "' . $c . '" AND page.page_namespace = '. $namespace .';');
 			$resultarr[] = $query->current()->count; // resultarr에 push
 		}
 		return ["result" => "SUCCESS",
