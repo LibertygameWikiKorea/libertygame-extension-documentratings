@@ -48,7 +48,7 @@ class GetGameRatings extends SimpleHandler {
 		$score_num = (string) $count;
 		$services = MediaWikiServices::getInstance();
 		// TODO: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
-		$dbaseref = wfGetDB(DB_REPLICA);
+		$dbaseref = $services->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		$parsetarget = "";
 		
 		// $query는 stdClass 형의 변수임
