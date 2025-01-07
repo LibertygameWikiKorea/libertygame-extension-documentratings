@@ -45,16 +45,14 @@ class CategoryCounter extends SimpleHandler {
 
 		$services = MediaWikiServices::getInstance();
 		// TODO: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
-		$dbaseref = wfGetDB(DB_REPLICA);
+		$dbase = $services->getDBLoadBalancer()->getConnection( DB_REPLICA );
 
 		$resultarr = [];
 
 		$category = explode("|", $category);
 		foreach ($category as $c){
 			// $query는 stdClass 형의 변수임
-			$query = $dbaseref->select('categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id', ['count' => 'COUNT(page.page_id)', ],
-			'categorylinks.cl_type = \'page\' AND categorylinks.cl_to = "' . $c . '" AND page.page_namespace = '. $namespace , '__METHOD__', []);
-
+			$query = $dbase->query('SELECT COUNT(page.page_id) as count FROM categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id WHERE categorylinks.cl_type = \'page\' AND categorylinks.cl_to = "' . $c . '" AND page.page_namespace = '. $namespace .';');
 			$resultarr[] = $query->current()->count; // resultarr에 push
 		}
 		return ["result" => "SUCCESS",
