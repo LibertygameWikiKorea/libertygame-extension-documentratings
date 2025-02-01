@@ -15,7 +15,7 @@
 
 ## get document ratings
 
-`(URL)/rest.php/sectionratings/v0/ratings/{분류 이름}/{불러올 갯수}`
+`(URL)/rest.php/sectionratings/v1/ratings/{분류 이름}/{불러올 갯수}`
 
 반환값은 다음과 같습니다.
 
@@ -48,7 +48,7 @@
 
 ## categorycounter
 
-`(URL)/rest.php/sectionratings/v0/categorycounter/{분류 이름, |(파이프 문자)로 구분하여 여러개를 반환}/{네임스페이스 번호}`
+`(URL)/rest.php/sectionratings/v1/categorycounter/{분류 이름, |(파이프 문자)로 구분하여 여러개를 반환}/{네임스페이스 번호}`
 
 반환값은 다음과 같습니다.
 
@@ -58,6 +58,21 @@
   "category": "...", // 분류 이름
   "count": ["7", ...], // 문자열 배열로 전달됩니다.
   "namespace": "1", // 0 이상의 이름공간 번호로 가능
+  "httpCode": 200, // 오류가 발생할 경우 미디어위키의 내부 코드 정의에 의존합니다(예: 타입 오류시 400),
+  "httpReason": "OK"
+}
+```
+
+## get user's ratings
+`(URL)/rest.php/sectionratings/v1/userratings/{사용자 이름}`
+
+반환값은 다음과 같습니다.
+
+```json
+{
+  "result": "SUCCESS", // "FAIL:" 로도 시작할 수 있습니다(예: 너무 많거나 적은 게임 정보 갯수). 이 경우 공백을 '-' 문자로 치환한 한 줄 오류 내용을 담은 "error"가 추가로 전달되어야 합니다.
+  "user": "...", // 사용자 이름
+  "ratelist": ["4", ...], // 숫자 배열로 전달됩니다.
   "httpCode": 200, // 오류가 발생할 경우 미디어위키의 내부 코드 정의에 의존합니다(예: 타입 오류시 400),
   "httpReason": "OK"
 }
