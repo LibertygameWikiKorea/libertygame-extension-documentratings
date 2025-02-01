@@ -43,7 +43,7 @@ class UserRatings extends SimpleHandler {
 		$dbase = $services->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		
 		// $query는 stdClass 형의 변수임
-		$query = $dbase->query('SELECT Vote.vote_page_id as page_id, Vote.vote_value as vote_value, FROM Vote INNER JOIN user ON user.user_name = "'. $user .'" AND Vote.vote_user_id = user.user_id ORDER BY vote_value DESC;');
+		$query = $dbase->query('SELECT Vote.vote_page_id as page_id, Vote.vote_value as vote_value FROM Vote INNER JOIN user ON user.user_name = "'. $user .'" AND Vote.vote_user_id = user.user_id ORDER BY vote_value DESC;');
 		// 특정 유저의 평가 값 목록 가져옴
 
 		$queryresult = [];
