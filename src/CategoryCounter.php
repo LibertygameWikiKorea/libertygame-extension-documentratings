@@ -3,12 +3,10 @@
 namespace MediaWiki\Extension\SectionRatings;
 
 // use statement
-use ApiBase;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Rest\SimpleHandler;
-use MediaWiki\Rest\ResponseFactory;
+
 use Wikimedia\ParamValidator\ParamValidator;
-use Wikimedia\Rdbms\Database;
 use Title;
 
 // GET /sectionratings/v0/categorycounter/{category}/{namespace} -> 이름공간 내 카테고리 개수 반환

@@ -3,12 +3,9 @@
 namespace MediaWiki\Extension\SectionRatings;
 
 // use statement
-use ApiBase;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Rest\SimpleHandler;
-use MediaWiki\Rest\ResponseFactory;
 use Wikimedia\ParamValidator\ParamValidator;
-use Wikimedia\Rdbms\Database;
 use Title;
 
 // GET /sectionratings/v0/ratings/{category}/{count} -> 성공/실패 반환

@@ -22,14 +22,9 @@
       "class": "MediaWiki\\Extension\\SectionRatings\\CategoryCounter"
     },
     {
-      "path": "/sectionratings/v1/ratings/{category}/{count}",
+      "path": "/sectionratings/v1/ratings/{category}/{age}/{count}",
       "method": "GET",
-      "class": "MediaWiki\\Extension\\SectionRatings\\GetGameRatings"
-    },
-    {
-      "path": "/sectionratings/v1/categorycounter/{category}/{namespace}",
-      "method": "GET",
-      "class": "MediaWiki\\Extension\\SectionRatings\\CategoryCounter"
+      "class": "MediaWiki\\Extension\\SectionRatings\\GetFilteredGameList"
     },
     {
       "path": "/sectionratings/v1/userratings/{user}",
