@@ -62,30 +62,10 @@ class GetGameRatings extends SimpleHandler {
 			$parsetarget = $parsetarget . "{{게임카드|" . $titlestr . "|속성=설명감춤}}";
 			$query->next();
 		}
-		// Mediawiki 사이트의 Parse API 예제를 가져와 응용함(Licensed under MIT License)
-		$parseResult = "";
-
-		// TODO: use $wgServer in LocalSettings.php
-		$endPoint = MediaWikiServices::getInstance()->getMainConfig()->get("Server") . "/api.php";
-		$params = [
-			"action" => "parse",
-			"text" => $parsetarget,
-			"contentmodel" => "wikitext",
-			"format" => "json"
-		];
-
-		$url = $endPoint . "?" . http_build_query( $params );
-
-		$ch = curl_init( $url );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		$output = curl_exec( $ch );
-		curl_close( $ch );
-
-		$parseResult = json_decode( $output, true );
 		return ["result" => "SUCCESS",
 			"category" => $category,
 			"gameList" => $queryresult,
-			"parseResult" => $parseResult["parse"]["text"]["*"],
+			"parseResult" => GameCardRenderer::render( $parsetarget ),
 			"httpCode" => 200,
 			"httpReason" => "OK"
 		];
