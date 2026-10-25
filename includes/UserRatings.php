@@ -15,8 +15,6 @@ use Title;
 
 // class
 class UserRatings extends SimpleHandler {
-  const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(\)@;\'\"*\+\/#]+/';
-
 	public function run( $user ) {
     $response = SimpleHandler::getResponseFactory();
     if (strcmp($user, "") === 0) {
@@ -26,21 +24,25 @@ class UserRatings extends SimpleHandler {
         "httpReason" => "Bad Request"
        ]);
     }
-    // Prevent SQL Injection
-    if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $user) == 1 || preg_match('/[\-]{2,}/', $user) == 1) {
-      return $response->createHttpError(400, [
-              "result" => "FAIL: invalid parameters",
-              "httpCode" => 400,
-              "httpReason" => "Bad Request"
-             ]);
-    }
-
 		$services = MediaWikiServices::getInstance();
 		// TODO: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
 		$dbase = $services->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		
 		// $query는 stdClass 형의 변수임
-		$query = $dbase->query('SELECT Vote.vote_page_id as page_id, Vote.vote_value as vote_value FROM Vote INNER JOIN user ON user.user_name = "'. $user .'" AND Vote.vote_user_id = user.user_id ORDER BY vote_value DESC;');
+		// 값은 쿼리 빌더가 바인딩/이스케이프 처리함
+		$query = $dbase->newSelectQueryBuilder()
+			->select( [
+				'page_id' => 'Vote.vote_page_id',
+				'vote_value' => 'Vote.vote_value',
+			] )
+			->from( 'Vote' )
+			->join( 'user', null, [
+				'user.user_name' => $user,
+				'Vote.vote_user_id = user.user_id',
+			] )
+			->orderBy( 'vote_value DESC' )
+			->caller( __METHOD__ )
+			->fetchResultSet();
 		// 특정 유저의 평가 값 목록 가져옴
 
 		$queryresult = [];

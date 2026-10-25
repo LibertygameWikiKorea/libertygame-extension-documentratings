@@ -13,7 +13,6 @@ use Title;
 
 // class
 class CategoryCounter extends SimpleHandler {
-	const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(\)@;\'\"*\+\/#]+/';
 	public function run( $category, $namespace ) {
     $response = SimpleHandler::getResponseFactory();
     if (strcmp($category, "") === 0) {
@@ -24,22 +23,14 @@ class CategoryCounter extends SimpleHandler {
        ]);
     }
 
-		if ($namespace < 0) {
+		// namespace는 문자열로 들어오므로 0 이상의 정수 형태인지 직접 확인
+		if (!ctype_digit($namespace)) {
 			return $response->createHttpError(400, [
-        "result" => "FAIL: namespace pararmeter is out of bound(non-negative)",
+        "result" => "FAIL: namespace pararmeter must be a non-negative integer",
         "httpCode" => 400,
         "httpReason" => "Bad Request"
        ]);
 		}
-
-    // Prevent SQL Injection
-    if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1 || preg_match('/[\-]{2,}/', $category) == 1) {
-      return $response->createHttpError(400, [
-              "result" => "FAIL: invalid character(s) found in parameters",
-              "httpCode" => 400,
-              "httpReason" => "Bad Request"
-             ]);
-    }
 
 		$services = MediaWikiServices::getInstance();
 		// TODO: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
@@ -49,9 +40,18 @@ class CategoryCounter extends SimpleHandler {
 
 		$category = explode("|", $category);
 		foreach ($category as $c){
-			// $query는 stdClass 형의 변수임
-			$query = $dbase->query('SELECT COUNT(page.page_id) as count FROM categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id WHERE categorylinks.cl_type = \'page\' AND categorylinks.cl_to = "' . $c . '" AND page.page_namespace = '. $namespace .';');
-			$resultarr[] = $query->current()->count; // resultarr에 push
+			// 값은 쿼리 빌더가 바인딩/이스케이프 처리함
+			$resultarr[] = $dbase->newSelectQueryBuilder()
+				->select( 'COUNT(page.page_id)' )
+				->from( 'categorylinks' )
+				->join( 'page', null, 'categorylinks.cl_from = page.page_id' )
+				->where( [
+					'categorylinks.cl_type' => 'page',
+					'categorylinks.cl_to' => $c,
+					'page.page_namespace' => (int) $namespace,
+				] )
+				->caller( __METHOD__ )
+				->fetchField(); // resultarr에 push
 		}
 		return ["result" => "SUCCESS",
 			"category" => $category,

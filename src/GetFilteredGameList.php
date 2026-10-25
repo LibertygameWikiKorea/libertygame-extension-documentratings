@@ -21,8 +21,12 @@ class GetFilteredGameList extends SimpleHandler
    * @param integer $count number of games to return (1-100).
    * @return array JSON response containing the filtered list of games.
    */
-  const AGE_TYPES = ["all", "12", "15"];
-  const REGEX_STRING_PREVENT_SQL_INJECTION = '/[\(\)@;\'\"*\+\/#]+/';
+  // age 파라미터 허용 목록(키) -> 필터링에 사용할 분류 이름
+  const AGE_CATEGORIES = [
+    "all" => "전체_이용가_게임",
+    "12" => "12세_이용가_게임",
+    "15" => "15세_이용가_게임",
+  ];
   public function run( $category, $age, $count, $offset ): mixed {
     $response = SimpleHandler::getResponseFactory();
     if (strcmp($category, "") === 0) {
@@ -32,7 +36,7 @@ class GetFilteredGameList extends SimpleHandler
         "httpReason" => "Bad Request"
        ]);
     }
-    if (array_find(self::AGE_TYPES, $age) === false) {
+    if (!is_string($age) || !isset(self::AGE_CATEGORIES[$age])) {
 			return $response->createHttpError(400, [
         "result" => "FAIL: wrong age parameter",
         "httpCode" => 400,
@@ -46,36 +50,30 @@ class GetFilteredGameList extends SimpleHandler
         "httpReason" => "Bad Request"
        ]);
 		}
-    // Prevent SQL Injection
-    if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $category) == 1 || preg_match('/[\-]{2,}/', $category) == 1) {
-      return $response->createHttpError(400, [
-              "result" => "FAIL: invalid parameters",
-              "httpCode" => 400,
-              "httpReason" => "Bad Request"
-             ]);
-    } else if (preg_match(self::REGEX_STRING_PREVENT_SQL_INJECTION, $age) == 1 || preg_match('/[\-]{2,}/', $age) == 1) {
-      return $response->createHttpError(400, [
-              "result" => "FAIL: invalid parameters",
-              "httpCode" => 400,
-              "httpReason" => "Bad Request"
-             ]);
-    }
+		if ($offset !== null && $offset < 0) {
+			return $response->createHttpError(400, [
+        "result" => "FAIL: offset pararmeter is out of bound",
+        "httpCode" => 400,
+        "httpReason" => "Bad Request"
+       ]);
+		}
 
     $services = MediaWikiServices::getInstance();
 		// Note: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
 		$dbase = $services->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		$parsetarget = "";
-		$query = null;
 		// $query는 stdClass 형의 변수임
-    if ($age === "all") {
-      $query = $dbase->query('SELECT page.page_id AS page_id FROM categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id WHERE categorylinks.cl_to = \"전체_이용가_게임\" ORDER BY page.page_touched DESC LIMIT ' . $count .' OFFSET '. $offset .';');
-    } else if ($age === "12") {
-      $query = $dbase->query('SELECT page.page_id AS page_id FROM categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id WHERE categorylinks.cl_to = \"12세_이용가_게임\" ORDER BY page.page_touched DESC LIMIT ' . $count .' OFFSET '. $offset .';');
-    } else if ($age === "15") {
-		  $query = $dbase->query('SELECT page.page_id AS page_id FROM categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id WHERE categorylinks.cl_to = \"15세_이용가_게임\" ORDER BY page.page_touched DESC LIMIT ' . $count .' OFFSET '. $offset .';');
-    } else {
-      $query = $dbase->query('SELECT page.page_id AS page_id FROM categorylinks INNER JOIN page ON categorylinks.cl_from = page.page_id WHERE categorylinks.cl_to = \"리버티게임\" ORDER BY page.page_touched DESC LIMIT ' . $count .' OFFSET '. $offset .';');
-    }
+		// 값은 쿼리 빌더가 바인딩/이스케이프 처리함. age는 위에서 허용 목록으로 검증됨
+		$query = $dbase->newSelectQueryBuilder()
+			->select( [ 'page_id' => 'page.page_id' ] )
+			->from( 'categorylinks' )
+			->join( 'page', null, 'categorylinks.cl_from = page.page_id' )
+			->where( [ 'categorylinks.cl_to' => self::AGE_CATEGORIES[$age] ] )
+			->orderBy( 'page.page_touched DESC' )
+			->limit( (int) $count )
+			->offset( (int) $offset )
+			->caller( __METHOD__ )
+			->fetchResultSet();
 
 		$queryresult = [];
 		for ($i = 0 ; $i < $query->numRows(); $i += 1){
