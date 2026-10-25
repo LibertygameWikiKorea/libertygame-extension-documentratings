@@ -2,19 +2,53 @@
   "name": "SectionRatings",
   "author": "Xen alpha(Senouis)",
   "url": "https://libertyga.me",
-  "description": "This extension modifies result of database table used by VoteNY extension.",
-  "version": "0.5.0",
+  "description": "This extension modifies result of database table used by VoteNY extension and provides the {{#documentratinglist:}} parser function.",
+  "version": "0.6.0",
   "license-name": "MIT",
   "type": "others",
   "AutoloadNamespaces": {
     "MediaWiki\\Extension\\SectionRatings\\": "src/",
-    "MediaWiki\\Extension\\SectionRatings\\Utils\\" : "includes/"
+    "MediaWiki\\Extension\\SectionRatings\\Utils\\": "includes/"
+  },
+  "ServiceWiringFiles": [
+    "src/ServiceWiring.php"
+  ],
+  "MessagesDirs": {
+    "SectionRatings": [
+      "i18n"
+    ]
+  },
+  "ExtensionMessagesFiles": {
+    "SectionRatingsMagic": "SectionRatings.i18n.magic.php"
+  },
+  "HookHandlers": {
+    "documentratinglist": {
+      "class": "MediaWiki\\Extension\\SectionRatings\\DocumentRatingList",
+      "services": [
+        "SectionRatings.GameRatingsLookup",
+        "TitleParser",
+        "TitleFormatter",
+        "MainConfig"
+      ]
+    }
+  },
+  "Hooks": {
+    "ParserFirstCallInit": "documentratinglist"
+  },
+  "config": {
+    "DocumentRatingListCacheExpiry": {
+      "value": 3600,
+      "description": "Maximum parser cache lifetime in seconds of pages using {{#documentratinglist:}}. 0 disables the parser cache for them."
+    }
   },
   "RestRoutes": [
     {
       "path": "/sectionratings/v0/ratings/{category}/{count}",
       "method": "GET",
-      "class": "MediaWiki\\Extension\\SectionRatings\\GetGameRatings"
+      "class": "MediaWiki\\Extension\\SectionRatings\\GetGameRatings",
+      "services": [
+        "SectionRatings.GameRatingsLookup"
+      ]
     },
     {
       "path": "/sectionratings/v0/categorycounter/{category}/{namespace}",
