@@ -1,0 +1,27 @@
+{
+  "name": "libertygame-documentratings",
+  "version": "1.2.0",
+  "description": "LibertygameWiki-specific MediaWiki extension providing REST API endpoints for game list.",
+  "type": "module",
+  "main": "dist",
+  "types": "dist",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "libertygame",
+    "mediawiki",
+    "extension",
+    "rest",
+    "api"
+  ],
+  "author": "Xen-alpha",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Xen-alpha/libertygame-documentratings/issues"
+  },
+  "homepage": "https://github.com/Xen-alpha/libertygame-documentratings#readme",
+  "devDependencies": {
+    "eslint" : "^8.45.0"
+  }
+}
