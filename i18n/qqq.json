@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Xen-alpha"
+		]
+	},
+	"documentratinglist-empty": "Shown by the <code>{{#documentratinglist:}}</code> parser function when no page in the category has enough ratings. Set the message to <code>-</code> to show nothing.",
+	"documentratinglist-error-category-empty": "Error shown by the <code>{{#documentratinglist:}}</code> parser function when the first argument (category name) is empty.",
+	"documentratinglist-error-category-invalid": "Error shown by the <code>{{#documentratinglist:}}</code> parser function when the first argument is not a valid category name.",
+	"documentratinglist-error-count": "Error shown by the <code>{{#documentratinglist:}}</code> parser function when the second argument is not an integer in range.\n\nParameters:\n* $1 - minimum count\n* $2 - maximum count",
+	"documentratinglist-error-expensive": "Error shown by the <code>{{#documentratinglist:}}</code> parser function when the expensive parser function limit of the page was exceeded."
+}

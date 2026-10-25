@@ -1,6 +1,6 @@
 # mediawiki-extension-DocumentRatings(구 sectionratings)
 
-이 확장기능은 미디어위키 용으로 설계된 VoteNY 확장 기능으로 만든 특정 콘테스트의 데이터베이스 테이블에서 현재 3.0 이상의 평균 별점 상위 n개의 항목에 관한 정보를 JSON 포맷으로 반환합니다. 또, 특정 이름 공간 내 특정 분류가 달린 문서의 수를 세는 보조 기능도 가지고 있습니다. 이 밖에 이용가(전체/12/15)별 게임 목록과 사용자별 평가 기록을 조회하는 API도 제공합니다.
+이 확장기능은 미디어위키 용으로 설계된 VoteNY 확장 기능으로 만든 특정 콘테스트의 데이터베이스 테이블에서 현재 3.0 이상의 평균 별점 상위 n개의 항목에 관한 정보를 JSON 포맷으로 반환합니다. 문서 안에서 같은 결과를 게임카드로 바로 출력하는 파서 함수 `{{#documentratinglist:}}`도 제공합니다. 또, 특정 이름 공간 내 특정 분류가 달린 문서의 수를 세는 보조 기능도 가지고 있습니다. 이 밖에 이용가(전체/12/15)별 게임 목록과 사용자별 평가 기록을 조회하는 API도 제공합니다.
 
 이 확장 기능은 [리버티게임 위키](https://libertyga.me) 내에서 사용할 목적으로 만들어졌습니다.
 
@@ -10,6 +10,33 @@
 
 1. 미디어위키의 extensions 폴더에 git clone합니다. 이때 적절한 폴더 이름(예: DocumentRatings)으로 clone하도록 파라미터를 설정하세요
 2. LocalSettings.php에서 `wfLoadExtension( 'DocumentRatings' );`로 확장 기능을 로드합니다. (인자는 clone한 폴더 이름입니다)
+3. 0.6.0 이상으로 업데이트할 때는 파서 함수의 매직 워드를 등록하기 위해 `php maintenance/run.php rebuildLocalisationCache`를 한 번 실행해야 할 수 있습니다. 로컬라이제이션 캐시를 수동으로 갱신하는 설정(`$wgLocalisationCacheConf['manualRecache']`)이면 필수입니다.
+
+# 파서 함수 사용법
+
+위키 문서 안에서 `{{#documentratinglist:분류 이름|불러올 갯수}}`로 평균 별점 상위 게임의 게임카드를 바로 출력할 수 있습니다. JavaScript나 REST API 호출 없이 서버에서 문서를 파싱할 때 함께 렌더링되며, 결과는 파서 캐시에 저장됩니다.
+
+```wikitext
+{{#documentratinglist:리버티게임|4}}
+{{#documentratinglist:어드벤처 게임|{{{1|8}}}}}
+```
+
+- 분류 이름은 `분류:` 접두사, 공백, 언더바를 모두 쓸 수 있습니다. 비워 둘 수 없습니다.
+- 불러올 갯수는 1 이상 100 이하이며, 생략하면 4입니다.
+- 선정 기준은 `get document ratings` API와 같습니다(평균 별점 3.0 이상, 평가 수 2명 이상, 평균 별점 내림차순).
+- 출력은 `<div class="documentratinglist">` 안에 게임카드 틀(`{{게임카드}}`) 하나가 들어가는 구조이므로, `.documentratinglist > .gamecards`를 CSS로 꾸밀 수 있습니다.
+- 조건에 맞는 문서가 없으면 `MediaWiki:Documentratinglist-empty` 메시지가 출력됩니다. 이 메시지를 `-`로 바꾸면 아무것도 출력하지 않습니다.
+- 인자가 잘못되면 빨간색 오류 문구(`<strong class="error">`)가 출력됩니다.
+- 비싼 파서 함수로 취급되므로 문서당 호출 횟수는 `$wgExpensiveParserFunctionLimit`(기본값 100)의 영향을 받습니다.
+
+평가 값이 바뀌어도 문서가 다시 파싱되기 전까지는 이전 결과가 보입니다. 문서의 파서 캐시 유지 시간은 `LocalSettings.php`에서 설정합니다.
+
+```php
+// 기본값 3600(초). 0이면 이 파서 함수를 쓰는 문서는 파서 캐시를 쓰지 않습니다.
+$wgDocumentRatingListCacheExpiry = 3600;
+```
+
+문서를 바로 갱신하려면 문서에서 Purge를 실행하세요. 파서 캐시가 비어 있을 때 DB 부하를 줄이기 위해 조회 결과도 10분간 별도로 캐시되므로, 반영까지 최대 10분이 더 걸릴 수 있습니다.
 
 # REST API 사용 예시
 
@@ -51,7 +78,7 @@
     },
     ...
   ],
-  "parseResult": "...", // 리버티게임 게임카드 틀을 파싱한 HTML 결과물이 "mw-parser-output" div 태그에 싸인 채로 포함됩니다.
+  "parseResult": "...", // (deprecated: 파서 함수 {{#documentratinglist:}}로 대체됨) 리버티게임 게임카드 틀을 파싱한 HTML 결과물이 "mw-parser-output" div 태그에 싸인 채로 포함됩니다.
   "httpCode": 200,
   "httpReason": "OK"
 }
