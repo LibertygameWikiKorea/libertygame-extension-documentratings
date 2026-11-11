@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Xen-alpha"
+		]
+	},
+	"documentratinglist-empty": "No rated games to show.",
+	"documentratinglist-error-category-empty": "documentratinglist: the category name is empty.",
+	"documentratinglist-error-category-invalid": "documentratinglist: invalid category name.",
+	"documentratinglist-error-count": "documentratinglist: the count must be an integer from $1 to $2.",
+	"documentratinglist-error-expensive": "documentratinglist: the expensive parser function limit was exceeded."
+}
