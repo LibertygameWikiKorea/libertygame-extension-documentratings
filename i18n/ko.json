@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Xen-alpha"
+		]
+	},
+	"documentratinglist-empty": "표시할 게임이 없습니다.",
+	"documentratinglist-error-category-empty": "documentratinglist: 분류 이름이 비어 있습니다.",
+	"documentratinglist-error-category-invalid": "documentratinglist: 올바르지 않은 분류 이름입니다.",
+	"documentratinglist-error-count": "documentratinglist: 갯수는 $1 이상 $2 이하의 정수여야 합니다.",
+	"documentratinglist-error-expensive": "documentratinglist: 비싼 파서 함수 호출 한도를 넘었습니다."
+}

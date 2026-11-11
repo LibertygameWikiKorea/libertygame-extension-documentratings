@@ -3,10 +3,8 @@
 namespace MediaWiki\Extension\SectionRatings;
 
 // use statement
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Rest\SimpleHandler;
 use Wikimedia\ParamValidator\ParamValidator;
-use Title;
 
 // GET /sectionratings/v0/ratings/{category}/{count} -> 성공/실패 반환
 
@@ -15,6 +13,12 @@ use Title;
 
 // class
 class GetGameRatings extends SimpleHandler {
+	private GameRatingsLookup $lookup;
+
+	public function __construct( GameRatingsLookup $lookup ) {
+		$this->lookup = $lookup;
+	}
+
 	public function run( $category, $count ) {
     $response = SimpleHandler::getResponseFactory();
     if (strcmp($category, "") === 0) {
@@ -31,40 +35,16 @@ class GetGameRatings extends SimpleHandler {
         "httpReason" => "Bad Request"
        ]);
 		}
-		$score_num = (string) $count;
-		$services = MediaWikiServices::getInstance();
-		// TODO: 1.42+ 부터 replica DB는 $services->getConnectionProvider()->getReplicaDatabase()로 가져와야 한다.
-		$dbase = $services->getDBLoadBalancer()->getConnection( DB_REPLICA );
-		$parsetarget = "";
-		
-		// $query는 stdClass 형의 변수임
-		// 값은 쿼리 빌더가 바인딩/이스케이프 처리함
-		$query = $dbase->newSelectQueryBuilder()
-			->select( [
-				'page_id' => 'Vote.vote_page_id',
-				'votecount' => 'COUNT(Vote.vote_value)',
-				'vote_average' => 'AVG(Vote.vote_value)',
-			] )
-			->from( 'categorylinks' )
-			->join( 'Vote', null, 'categorylinks.cl_from = Vote.vote_page_id' )
-			->where( [ 'categorylinks.cl_to' => $category ] )
-			->groupBy( 'Vote.vote_page_id' )
-			->having( [ 'vote_average >= 3', 'votecount >= 2' ] )
-			->orderBy( [ 'vote_average DESC', 'votecount DESC' ] )
-			->limit( (int) $count )
-			->caller( __METHOD__ )
-			->fetchResultSet();
 		// 카테고리로 필터링 + 평점 3 이상만 결과로 반환 + 자기 추천 방지를 위한 2명 이상의 평가 요구
+		$rows = $this->lookup->getTopRated( $category, (int) $count );
 
+		$parsetarget = "";
 		$queryresult = [];
-		for ($i = 0 ; $i < $query->numRows(); $i += 1){
-			$row = $query->current();
-			$title = Title::newFromID((int) $row->page_id)->getSubjectPage(); // 토론 페이지에 위젯이 붙는 것을 가정하고 본문 문서를 가져옴
-			$titlestr = $title->getTitleValue()->getText();
-			array_push($queryresult, ["pagename" => $titlestr, "votecount" => $row->votecount, "score" => $row->vote_average]);
+		foreach ($rows as $row) {
+			$titlestr = $row['title']->getText(); // 토론 페이지에 위젯이 붙는 것을 가정하고 본문 문서를 가져옴
+			array_push($queryresult, ["pagename" => $titlestr, "votecount" => $row['votecount'], "score" => $row['score']]);
 			// 게임카드 파싱을 위해 파라미터 추가
 			$parsetarget = $parsetarget . "{{게임카드|" . $titlestr . "|속성=설명감춤}}";
-			$query->next();
 		}
 		return ["result" => "SUCCESS",
 			"category" => $category,
