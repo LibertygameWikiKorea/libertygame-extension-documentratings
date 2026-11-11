@@ -23,7 +23,7 @@ class GetFilteredGameList extends SimpleHandler
    */
   // age 파라미터 허용 목록(키) -> 필터링에 사용할 분류 이름
   const AGE_CATEGORIES = [
-    "all" => "전체_이용가_게임",
+    "all" => GameRatingsLookup::ALL_AGES_CATEGORY,
     "12" => "12세_이용가_게임",
     "15" => "15세_이용가_게임",
   ];

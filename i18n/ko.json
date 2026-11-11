@@ -8,5 +8,9 @@
 	"documentratinglist-error-category-empty": "documentratinglist: 분류 이름이 비어 있습니다.",
 	"documentratinglist-error-category-invalid": "documentratinglist: 올바르지 않은 분류 이름입니다.",
 	"documentratinglist-error-count": "documentratinglist: 갯수는 $1 이상 $2 이하의 정수여야 합니다.",
-	"documentratinglist-error-expensive": "documentratinglist: 비싼 파서 함수 호출 한도를 넘었습니다."
+	"documentratinglist-error-expensive": "documentratinglist: 비싼 파서 함수 호출 한도를 넘었습니다.",
+	"documentratings-over12-label": "만 12세 이상입니다(체크하지 않아도 가입할 수 있습니다)",
+	"documentratings-over12-help": "체크하지 않으면 인기 게임 목록에 전체 이용가 게임만 표시됩니다. 가입한 뒤에도 환경 설정에서 언제든지 바꿀 수 있습니다.",
+	"documentratings-pref-over12": "만 12세 이상입니다",
+	"documentratings-pref-over12-help": "체크하지 않으면 인기 게임 목록에 전체 이용가 게임만 표시됩니다."
 }

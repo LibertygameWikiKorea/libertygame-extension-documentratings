@@ -24,6 +24,7 @@
 - 분류 이름은 `분류:` 접두사, 공백, 언더바를 모두 쓸 수 있습니다. 비워 둘 수 없습니다.
 - 불러올 갯수는 1 이상 100 이하이며, 생략하면 4입니다.
 - 선정 기준은 `get document ratings` API와 같습니다(평균 별점 3.0 이상, 평가 수 2명 이상, 평균 별점 내림차순).
+- 사용자의 [나이 설정](#나이-설정만-12세-이상)에 따라, 체크하지 않았거나 로그인하지 않은 사용자에게는 `분류:전체 이용가 게임`이 함께 붙은 문서만 보여줍니다.
 - 출력은 `<div class="documentratinglist">` 안에 게임카드 틀(`{{게임카드}}`) 하나가 들어가는 구조이므로, `.documentratinglist > .gamecards`를 CSS로 꾸밀 수 있습니다.
 - 조건에 맞는 문서가 없으면 `MediaWiki:Documentratinglist-empty` 메시지가 출력됩니다. 이 메시지를 `-`로 바꾸면 아무것도 출력하지 않습니다.
 - 인자가 잘못되면 빨간색 오류 문구(`<strong class="error">`)가 출력됩니다.
@@ -37,6 +38,24 @@ $wgDocumentRatingListCacheExpiry = 3600;
 ```
 
 문서를 바로 갱신하려면 문서에서 Purge를 실행하세요. 파서 캐시가 비어 있을 때 DB 부하를 줄이기 위해 조회 결과도 10분간 별도로 캐시되므로, 반영까지 최대 10분이 더 걸릴 수 있습니다.
+
+## 나이 설정(만 12세 이상)
+
+가입 폼 맨 아래에 선택 항목 `만 12세 이상입니다(체크하지 않아도 가입할 수 있습니다)`가 있고(기본값 해제), 계정 환경 설정의 `개인 정보` 탭에서 언제든지 바꿀 수 있습니다. 값은 사용자 옵션 `documentratings-over12`(1: 체크, 0: 해제)로 저장됩니다.
+
+- **체크하지 않았거나 로그인하지 않은 사용자**: 항상 `분류:전체 이용가 게임`이 함께 붙은 문서만 대상으로 합니다.
+- **체크한 사용자**: 이용가 제한 없이 모든 문서를 대상으로 합니다.
+- 파서 함수 `{{#documentratinglist:}}`, REST API `v1/documentratinglist`, Lua 모듈이 모두 이 설정을 따릅니다.
+- 이 설정을 읽은 문서는 파서 캐시가 설정 값(2가지)별로 나뉩니다. 읽지 않는 문서는 영향이 없습니다.
+- 나이는 스스로 체크하는 값이며 연령 확인 절차가 아닙니다. 이 설정이 생기기 전에 가입한 사용자는 모두 해제 상태입니다.
+
+### Lua(Scribunto) 사용법
+
+Scribunto 확장 기능이 설치되어 있으면 Lua 모듈에서 같은 값을 읽을 수 있습니다. Scribunto가 없어도 이 확장 기능은 오류 없이 동작합니다.
+
+```lua
+local over12 = mw.ext.documentratings.isOver12() -- boolean. 로그인하지 않은 사용자는 항상 false
+```
 
 # REST API 사용 예시
 
@@ -85,6 +104,34 @@ $wgDocumentRatingListCacheExpiry = 3600;
 ```
 
 - 참고: 게임카드 틀은 Parse API(api.php)를 호출하지 않고 미디어위키 파서로 직접 렌더링하며, 익명 사용자 기준 옵션이 적용됩니다.
+
+## get document ratings by user setting
+
+`(URL)/rest.php/sectionratings/v1/documentratinglist/{분류 이름}/{불러올 갯수}`
+
+- 위 `get document ratings`와 같지만, 요청한 사용자(로그인 쿠키)의 [나이 설정](#나이-설정만-12세-이상)을 따릅니다. 체크하지 않았거나 로그인하지 않은 사용자에게는 `전체_이용가_게임` 분류가 함께 붙은 문서만 반환합니다.
+- 응답이 사용자마다 다르므로 `Cache-Control: private`, `Vary: Cookie`로 공유 캐시에 저장되지 않게 합니다.
+- 불러올 갯수는 1 이상 100 이하입니다.
+
+반환값은 다음과 같습니다.
+
+```json
+{
+  "result": "SUCCESS",
+  "category": "...", // 분류 이름
+  "over12": false, // 요청한 사용자의 설정 (로그인하지 않았으면 항상 false)
+  "allAgesOnly": true, // 전체 이용가 문서만 대상으로 했는지 (over12의 반대)
+  "gameList": [
+    { "pagename": "...", "votecount": "2", "score": "4.5" },
+    ...
+  ],
+  "parseResult": "...", // 게임카드 HTML 결과물 ("mw-parser-output" div 태그에 싸임)
+  "httpCode": 200,
+  "httpReason": "OK"
+}
+```
+
+- 참고: 기존 `get document ratings`(v0)는 나이 설정과 관계없이 이용가 제한 없이 반환합니다.
 
 ## get filtered game list
 

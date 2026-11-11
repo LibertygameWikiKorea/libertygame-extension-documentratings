@@ -8,5 +8,9 @@
 	"documentratinglist-error-category-empty": "Error shown by the <code>{{#documentratinglist:}}</code> parser function when the first argument (category name) is empty.",
 	"documentratinglist-error-category-invalid": "Error shown by the <code>{{#documentratinglist:}}</code> parser function when the first argument is not a valid category name.",
 	"documentratinglist-error-count": "Error shown by the <code>{{#documentratinglist:}}</code> parser function when the second argument is not an integer in range.\n\nParameters:\n* $1 - minimum count\n* $2 - maximum count",
-	"documentratinglist-error-expensive": "Error shown by the <code>{{#documentratinglist:}}</code> parser function when the expensive parser function limit of the page was exceeded."
+	"documentratinglist-error-expensive": "Error shown by the <code>{{#documentratinglist:}}</code> parser function when the expensive parser function limit of the page was exceeded.",
+	"documentratings-over12-label": "Label of the optional checkbox on the account creation form. Checking it stores the <code>documentratings-over12</code> user option.",
+	"documentratings-over12-help": "Help text of the optional \"12 years old or older\" checkbox on the account creation form.",
+	"documentratings-pref-over12": "Label of the \"12 years old or older\" toggle in [[Special:Preferences]].",
+	"documentratings-pref-over12-help": "Help text of the \"12 years old or older\" toggle in [[Special:Preferences]]."
 }

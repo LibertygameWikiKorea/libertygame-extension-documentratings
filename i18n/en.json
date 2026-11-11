@@ -8,5 +8,9 @@
 	"documentratinglist-error-category-empty": "documentratinglist: the category name is empty.",
 	"documentratinglist-error-category-invalid": "documentratinglist: invalid category name.",
 	"documentratinglist-error-count": "documentratinglist: the count must be an integer from $1 to $2.",
-	"documentratinglist-error-expensive": "documentratinglist: the expensive parser function limit was exceeded."
+	"documentratinglist-error-expensive": "documentratinglist: the expensive parser function limit was exceeded.",
+	"documentratings-over12-label": "I am 12 years old or older (you can sign up without checking this)",
+	"documentratings-over12-help": "If unchecked, popular game lists only show games rated for all ages. You can change this at any time in your preferences after signing up.",
+	"documentratings-pref-over12": "I am 12 years old or older",
+	"documentratings-pref-over12-help": "If unchecked, popular game lists only show games rated for all ages."
 }
