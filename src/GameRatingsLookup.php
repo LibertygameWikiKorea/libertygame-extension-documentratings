@@ -13,6 +13,8 @@ use Wikimedia\Rdbms\IConnectionProvider;
 class GameRatingsLookup {
 	public const MIN_COUNT = 1;
 	public const MAX_COUNT = 100;
+	// 나이 필터링(allAgesOnly)에 쓰는 분류 이름(공백 대신 언더바)
+	public const ALL_AGES_CATEGORY = '전체_이용가_게임';
 
 	private IConnectionProvider $dbProvider;
 	/** @var \WANObjectCache|\Wikimedia\ObjectCache\WANObjectCache 1.43부터 네임스페이스가 바뀌었으므로 타입 힌트를 쓰지 않음 */
@@ -30,18 +32,24 @@ class GameRatingsLookup {
 	 *
 	 * @param string $category cl_to에 그대로 쓰이는 분류 이름(공백 대신 언더바)
 	 * @param int $count 반환할 갯수
+	 * @param bool $allAgesOnly true이면 ALL_AGES_CATEGORY 분류가 함께 붙은 문서만 대상으로 함
 	 * @param int $cacheTtl 결과를 캐시할 시간(초). 0 이하면 캐시하지 않음
 	 * @return array[] 각 원소는 ['title' => TitleValue(본문 문서), 'votecount' => string, 'score' => string]
 	 */
-	public function getTopRated( string $category, int $count, int $cacheTtl = 0 ): array {
+	public function getTopRated(
+		string $category,
+		int $count,
+		bool $allAgesOnly = false,
+		int $cacheTtl = 0
+	): array {
 		if ( $cacheTtl > 0 ) {
 			$rows = $this->cache->getWithSetCallback(
-				$this->cache->makeKey( 'sectionratings', 'toprated', $category, $count ),
+				$this->cache->makeKey( 'sectionratings', 'toprated', $category, $count, (int) $allAgesOnly ),
 				$cacheTtl,
-				fn () => $this->queryTopRated( $category, $count )
+				fn () => $this->queryTopRated( $category, $count, $allAgesOnly )
 			);
 		} else {
-			$rows = $this->queryTopRated( $category, $count );
+			$rows = $this->queryTopRated( $category, $count, $allAgesOnly );
 		}
 
 		$result = [];
@@ -58,12 +66,12 @@ class GameRatingsLookup {
 	/**
 	 * 캐시에 넣을 수 있도록 TitleValue가 아닌 배열로 반환한다.
 	 */
-	private function queryTopRated( string $category, int $count ): array {
+	private function queryTopRated( string $category, int $count, bool $allAgesOnly ): array {
 		$dbr = $this->dbProvider->getReplicaDatabase();
 
 		// 값은 쿼리 빌더가 바인딩/이스케이프 처리함
 		// 카테고리로 필터링 + 평점 3 이상만 결과로 반환 + 자기 추천 방지를 위한 2명 이상의 평가 요구
-		$res = $dbr->newSelectQueryBuilder()
+		$queryBuilder = $dbr->newSelectQueryBuilder()
 			->select( [
 				'page_namespace' => 'page.page_namespace',
 				'page_title' => 'page.page_title',
@@ -73,7 +81,14 @@ class GameRatingsLookup {
 			->from( 'categorylinks' )
 			->join( 'Vote', null, 'categorylinks.cl_from = Vote.vote_page_id' )
 			->join( 'page', null, 'page.page_id = Vote.vote_page_id' )
-			->where( [ 'categorylinks.cl_to' => $category ] )
+			->where( [ 'categorylinks.cl_to' => $category ] );
+		if ( $allAgesOnly ) {
+			// 같은 문서가 전체 이용가 분류에도 속해야 한다. 문서당 분류 연결은 하나뿐이라 행이 늘어나지 않는다.
+			$queryBuilder
+				->join( 'categorylinks', 'age_cl', 'age_cl.cl_from = categorylinks.cl_from' )
+				->where( [ 'age_cl.cl_to' => self::ALL_AGES_CATEGORY ] );
+		}
+		$res = $queryBuilder
 			->groupBy( [ 'Vote.vote_page_id', 'page.page_namespace', 'page.page_title' ] )
 			->having( [ 'vote_average >= 3', 'votecount >= 2' ] )
 			->orderBy( [ 'vote_average DESC', 'votecount DESC' ] )

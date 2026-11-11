@@ -11,6 +11,24 @@ use Title;
 
 // class
 class GameCardRenderer {
+	// 게임카드 틀 이름
+	public const TEMPLATE = '게임카드';
+
+	/**
+	 * 문서 이름 목록을 게임카드 틀 한 번 호출로 바꾼 위키텍스트를 반환한다.
+	 * 틀은 호출마다 .gamecards로 감싸므로, 한 번만 호출해 문서 목록(<ul><li>)을 통째로 넘긴다.
+	 * 문서 이름에 '='이 있어도 되도록 1=로 지정한다. 문서 이름에는 '|', '{', '}', '<', '>'를 쓸 수 없다.
+	 *
+	 * @param string[] $titles
+	 */
+	public static function listWikitext( array $titles ): string {
+		$items = '';
+		foreach ( $titles as $title ) {
+			$items .= '<li>' . $title . '</li>';
+		}
+		return '{{' . self::TEMPLATE . '|1=<ul>' . $items . '</ul>|속성=설명감춤}}';
+	}
+
 	public static function render( string $wikitext ): string {
 		$services = MediaWikiServices::getInstance();
 		// api.php?action=parse 를 text만으로 호출했을 때의 기본 제목과 동일

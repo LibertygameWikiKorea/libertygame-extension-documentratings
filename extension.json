@@ -3,7 +3,7 @@
   "author": "Xen alpha(Senouis)",
   "url": "https://libertyga.me",
   "description": "This extension modifies result of database table used by VoteNY extension and provides the {{#documentratinglist:}} parser function.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "license-name": "MIT",
   "type": "others",
   "AutoloadNamespaces": {
@@ -30,10 +30,23 @@
         "TitleFormatter",
         "MainConfig"
       ]
+    },
+    "agehooks": {
+      "class": "MediaWiki\\Extension\\SectionRatings\\AgeHooks",
+      "services": [
+        "SectionRatings.AgePreference"
+      ]
+    },
+    "scribuntohooks": {
+      "class": "MediaWiki\\Extension\\SectionRatings\\ScribuntoHooks"
     }
   },
   "Hooks": {
-    "ParserFirstCallInit": "documentratinglist"
+    "ParserFirstCallInit": "documentratinglist",
+    "GetPreferences": "agehooks",
+    "ParserOptionsRegister": "agehooks",
+    "AuthChangeFormFields": "agehooks",
+    "ScribuntoExternalLibraries": "scribuntohooks"
   },
   "config": {
     "DocumentRatingListCacheExpiry": {
@@ -48,6 +61,15 @@
       "class": "MediaWiki\\Extension\\SectionRatings\\GetGameRatings",
       "services": [
         "SectionRatings.GameRatingsLookup"
+      ]
+    },
+    {
+      "path": "/sectionratings/v1/documentratinglist/{category}/{count}",
+      "method": "GET",
+      "class": "MediaWiki\\Extension\\SectionRatings\\GetDocumentRatingList",
+      "services": [
+        "SectionRatings.GameRatingsLookup",
+        "SectionRatings.AgePreference"
       ]
     },
     {
@@ -71,6 +93,20 @@
     "MediaWiki": ">= 1.42.0",
     "extensions": {
       "VoteNY": "*"
+    }
+  },
+  "DefaultUserOptions": {
+    "documentratings-over12": 0
+  },
+  "AuthManagerAutoConfig": {
+    "secondaryauth": {
+      "DocumentRatingsAge": {
+        "class": "MediaWiki\\Extension\\SectionRatings\\AgeAuthProvider",
+        "services": [
+          "UserOptionsManager"
+        ],
+        "sort": 100
+      }
     }
   }
 }

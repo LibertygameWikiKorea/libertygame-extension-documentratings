@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Extension\SectionRatings\AgePreference;
 use MediaWiki\Extension\SectionRatings\GameRatingsLookup;
 use MediaWiki\MediaWikiServices;
 
@@ -10,5 +11,8 @@ return [
 			$services->getMainWANObjectCache(),
 			$services->getNamespaceInfo()
 		);
+	},
+	'SectionRatings.AgePreference' => static function ( MediaWikiServices $services ): AgePreference {
+		return new AgePreference( $services->getUserOptionsLookup() );
 	},
 ];
